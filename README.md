@@ -211,6 +211,10 @@ What features do we showcase in kafka-storm-starter?  Note that we focus on show
       [KafkaStormSpec](src/test/scala/com/miguno/kafkastorm/integration/KafkaStormSpec.scala)
     * A Storm topology that writes Avro-encoded data to Kafka:
       [KafkaStormSpec](src/test/scala/com/miguno/kafkastorm/integration/KafkaStormSpec.scala)
+* Unit testing
+    * [AvroDecoderBoltSpec](src/test/scala/com/miguno/kafkastorm/storm/AvroDecoderBoltSpec.scala)
+    * [AvroSchemeSpec](src/test/scala/com/miguno/kafkastorm/storm/AvroSchemeSpec.scala)
+    * And more under [src/test/scala](src/test/scala/com/miguno/kafkastorm/).
 * Integration testing
     * [KafkaSpec](src/test/scala/com/miguno/kafkastorm/integration/KafkaSpec.scala):
       Tests for Kafka, which launch and run against in-memory instances of Kafka and ZooKeeper.
