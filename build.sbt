@@ -71,7 +71,7 @@ libraryDependencies ++= Seq(
 // merely as a test dependency), which we need for TypeTag usage.
 libraryDependencies <+= (scalaVersion)("org.scala-lang" % "scala-reflect" % _)
 
-javaOptions ++= Seq("-Djava.awt.headless=true")
+javaOptions ++= Seq("-Xmx512m", "-Djava.awt.headless=true")
 
 publishArtifact in Test := false
 
