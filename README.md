@@ -405,7 +405,9 @@ Run the unit tests via:
     $ ./sbt clean scoverage:test
 
 * An HTML report will be created at `target/scala-2.10/scoverage-report/index.html`.
-* An XML report will be created at `./target/scala-2.10/scoverage-report/scoverage.xml`.
+* XML reports will be created at:
+    * `./target/scala-2.10/coverage-report/cobertura.xml`
+    * `./target/scala-2.10/scoverage-report/scoverage.xml`
 
 Integration with CI servers:
 
@@ -413,7 +415,7 @@ Integration with CI servers:
     * Configure the build.
     * Go to _Post-build Actions_.
     * Add a post-build action for _Publish Cobertura Coverage Report_.
-    * In the _Cobertura xml report pattern_ field add the pattern `**/target/scala-2.10/scoverage-report/scoverage.xml`.
+    * In the _Cobertura xml report pattern_ field add the pattern `**/target/scala-2.10/coverage-report/cobertura.xml`.
     * Now each build of your job will have a _Coverage Report_ link.
 * TeamCity integration:
     * Edit the build configuration.
