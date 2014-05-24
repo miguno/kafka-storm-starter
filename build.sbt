@@ -73,6 +73,8 @@ libraryDependencies <+= (scalaVersion)("org.scala-lang" % "scala-reflect" % _)
 
 javaOptions ++= Seq("-Xmx512m", "-Djava.awt.headless=true")
 
+scalacOptions ++= Seq("-unchecked", "-deprecation")
+
 publishArtifact in Test := false
 
 parallelExecution in Test := false
