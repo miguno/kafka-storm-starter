@@ -1,0 +1,2 @@
+-J-Xmx512m
+-Djava.awt.headless=true
