@@ -20,6 +20,7 @@ import org.I0Itec.zkclient.ZkClient
 import org.scalatest._
 import scala.collection.mutable
 import scala.concurrent.duration._
+import scala.language.reflectiveCalls
 
 /**
  * This Kafka/Storm integration test code is slightly more complicated than the other tests in this project.  This is

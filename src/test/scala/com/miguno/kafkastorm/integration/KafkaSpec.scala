@@ -12,6 +12,7 @@ import org.I0Itec.zkclient.ZkClient
 import org.scalatest._
 import scala.collection.mutable
 import scala.concurrent.duration._
+import scala.language.reflectiveCalls
 import kafka.admin.AdminUtils
 
 @DoNotDiscover
