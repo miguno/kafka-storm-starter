@@ -63,7 +63,7 @@ libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-core" % "1.1.2",
   "org.slf4j" % "slf4j-api" % "1.7.7",
   // Test dependencies
-  "org.scalatest" %% "scalatest" % "2.1.5" % "test",
+  "org.scalatest" %% "scalatest" % "2.1.6" % "test",
   "org.mockito" % "mockito-all" % "1.9.5" % "test"
 )
 
