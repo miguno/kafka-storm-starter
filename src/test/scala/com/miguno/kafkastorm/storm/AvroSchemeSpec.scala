@@ -6,6 +6,7 @@ import com.twitter.bijection.avro.SpecificAvroCodecs
 import org.scalatest.{FunSpec, GivenWhenThen, Matchers}
 import scala.collection.JavaConverters._
 import scala.concurrent.duration._
+import scala.language.reflectiveCalls
 
 class AvroSchemeSpec extends FunSpec with Matchers with GivenWhenThen {
 
