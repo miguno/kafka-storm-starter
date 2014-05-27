@@ -25,6 +25,7 @@ Table of Contents
 * <a href="#Known-issues">Known issues and limitations</a>
     * <a href="#Known-issues-them">Upstream code</a>
     * <a href="#Known-issues-us">kafka-storm-starter code</a>
+* <a href="#changelog">Change log</a>
 * <a href="#Contributing">Contributing</a>
 * <a href="#License">License</a>
 * <a href="#References">References</a>
@@ -677,6 +678,13 @@ time.
   detect more reliably when to proceed (or fail/timeout) with the next step.  See the related discussion in the
   [review request 19696 for KAFKA-1317](https://reviews.apache.org/r/19696/#comment71202).
 * We noticed that the tests may fail when using Oracle/Sun JDK 1.6.0_24.  Later versions (e.g. 1.6.0_31) work fine.
+
+
+<a name="changelog"></a>
+
+# Change log
+
+See [CHANGELOG](CHANGELOG.md).
 
 
 <a name="Contributing"></a>
