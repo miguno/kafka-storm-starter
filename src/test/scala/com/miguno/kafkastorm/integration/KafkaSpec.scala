@@ -142,12 +142,13 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
         debug(s"Waiting $waitForConsumerToReadStormOutput ms for Kafka consumer threads to read messages")
         Thread.sleep(waitForConsumerToReadStormOutput.toMillis)
         debug("Finished waiting for Kafka consumer threads to read messages")
+        actualTweets.toSeq should be(f.messages.toSeq)
+
+        // Cleanup
         debug("Shutting down Kafka consumer threads")
         consumer.shutdown()
         debug("Shutting down Kafka producer app")
         producerApp.shutdown()
-
-        actualTweets.toSeq should be(f.messages.toSeq)
       }
     }
 
@@ -209,12 +210,13 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
         debug(s"Waiting $waitForConsumerToReadStormOutput ms for Kafka consumer threads to read messages")
         Thread.sleep(waitForConsumerToReadStormOutput.toMillis)
         debug("Finished waiting for Kafka consumer threads to read messages")
+        actualTweets.toSeq should be(f.messages.toSeq)
+
+        // Cleanup
         debug("Shutting down Kafka consumer threads")
         consumer.shutdown()
         debug("Shutting down Kafka producer app")
         producerApp.shutdown()
-
-        actualTweets.toSeq should be(f.messages.toSeq)
       }
     }
 

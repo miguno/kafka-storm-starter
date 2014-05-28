@@ -310,9 +310,11 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterAll wi
     Then("the Kafka consumer app should receive the original tweets from the Storm topology")
     val waitForConsumerToReadStormOutput = 300.millis
     Thread.sleep(waitForConsumerToReadStormOutput.toMillis)
+    actualTweets.toSeq should be(tweets.toSeq)
+
+    // Cleanup
     consumer.shutdown()
     producerApp.shutdown()
-    actualTweets.toSeq should be(tweets.toSeq)
   }
 
 }
