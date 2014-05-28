@@ -233,7 +233,7 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterAll wi
     }
     val producerApp = new KafkaProducerApp(inputTopic, kafka.brokerList, kafkaSyncProducerConfig)
 
-    And(s"a single-threaded Kafka consumer app that reads from topic $outputTopic")
+    And(s"a single-threaded Kafka consumer app that reads from topic $outputTopic and Avro-decodes the incoming data")
     // We start the Kafka consumer group, which (in our case) must be running before the first messages are being sent
     // to the output Kafka topic.  The Storm topology will write its output to this topic.  We use the Kafka consumer
     // group to learn which data was created by Storm, and compare this actual output data to the expected data (which
@@ -294,8 +294,7 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterAll wi
         val waitForTopologyStartupMs = 3.seconds.toMillis
         Thread.sleep(waitForTopologyStartupMs)
 
-        And("I use the Kafka producer app to Avro-encode the tweets and sent them to Kafka")
-        // Send the test input data to Kafka.
+        And("I Avro-encode the tweets and use the Kafka producer app to sent them to Kafka")
         tweets foreach {
           case tweet =>
             val bytes = Injection[Tweet, Array[Byte]](tweet)
@@ -308,7 +307,7 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterAll wi
       }
     })
 
-    Then("the Kafka consumer app should receive the decoded, original tweets from the Storm topology")
+    Then("the Kafka consumer app should receive the original tweets from the Storm topology")
     val waitForConsumerToReadStormOutput = 300.millis
     Thread.sleep(waitForConsumerToReadStormOutput.toMillis)
     consumer.shutdown()
