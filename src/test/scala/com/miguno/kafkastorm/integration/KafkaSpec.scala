@@ -144,6 +144,8 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
         debug("Finished waiting for Kafka consumer threads to read messages")
         debug("Shutting down Kafka consumer threads")
         consumer.shutdown()
+        debug("Shutting down Kafka producer app")
+        producerApp.shutdown()
 
         actualTweets.toSeq should be(f.messages.toSeq)
       }
@@ -209,6 +211,8 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
         debug("Finished waiting for Kafka consumer threads to read messages")
         debug("Shutting down Kafka consumer threads")
         consumer.shutdown()
+        debug("Shutting down Kafka producer app")
+        producerApp.shutdown()
 
         actualTweets.toSeq should be(f.messages.toSeq)
       }

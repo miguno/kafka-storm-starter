@@ -44,6 +44,8 @@ case class KafkaProducerApp(
 
   def send(value: Array[Byte]): Unit = producer.send(toMessage(None, value))
 
+  def shutdown(): Unit = producer.close()
+
 }
 
 /**

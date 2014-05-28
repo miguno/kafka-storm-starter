@@ -311,6 +311,7 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterAll wi
     val waitForConsumerToReadStormOutput = 300.millis
     Thread.sleep(waitForConsumerToReadStormOutput.toMillis)
     consumer.shutdown()
+    producerApp.shutdown()
     actualTweets.toSeq should be(tweets.toSeq)
   }
 
