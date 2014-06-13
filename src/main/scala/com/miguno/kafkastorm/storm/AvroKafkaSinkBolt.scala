@@ -3,7 +3,7 @@ package com.miguno.kafkastorm.storm
 import backtype.storm.task.TopologyContext
 import backtype.storm.topology.{BasicOutputCollector, OutputFieldsDeclarer}
 import backtype.storm.topology.base.BaseBasicBolt
-import backtype.storm.tuple.{Tuple, Fields}
+import backtype.storm.tuple.Tuple
 import com.miguno.kafkastorm.kafka.{KafkaProducerAppFactory, KafkaProducerApp}
 import com.twitter.bijection.Injection
 import com.twitter.bijection.avro.SpecificAvroCodecs
@@ -24,14 +24,12 @@ import org.slf4j.{Logger, LoggerFactory}
  *                        create its own Kafka producer when it is starting up (and this startup typically happens in a
  *                        different JVM on a different machine).
  * @param inputField The name of the field in the input tuple to read from.  (Default: "pojo")
- * @param outputField The name of the field in the output tuple to write to.  (Default: "bytes")
  * @tparam T The type of the Avro record (e.g. a `Tweet`) based on the underlying Avro schema being used.  Must be
  *           a subclass of Avro's `SpecificRecordBase`.
  */
 class AvroKafkaSinkBolt[T <: SpecificRecordBase : Manifest](
   producerFactory: KafkaProducerAppFactory,
-  inputField: String = "pojo",
-  outputField: String = "bytes")
+  inputField: String = "pojo")
   extends BaseBasicBolt {
 
   // Note: Ideally we would like to use TypeTag's instead of Manifest's here.  Doing so would only require replacing
@@ -68,9 +66,7 @@ class AvroKafkaSinkBolt[T <: SpecificRecordBase : Manifest](
     }
   }
 
-  override def declareOutputFields(declarer: OutputFieldsDeclarer) {
-    declarer.declare(new Fields())
-  }
+  override def declareOutputFields(declarer: OutputFieldsDeclarer) {}
 
 }
 

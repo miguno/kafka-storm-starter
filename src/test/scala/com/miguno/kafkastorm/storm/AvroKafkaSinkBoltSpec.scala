@@ -85,10 +85,7 @@ class AvroKafkaSinkBoltSpec extends FunSpec with Matchers with GivenWhenThen wit
       Then("it should declare zero output fields")
       val declarer = mock[OutputFieldsDeclarer]
       bolt.declareOutputFields(declarer)
-      // We use ArgumentMatcher as a workaround because Storm's Field class does not implement a proper `equals()`
-      // method, and Mockito relies on `equals()` for verification.  Because of that the following typical approach
-      // does NOT work: `verify(declarer, times(1)).declare(new Fields())`.
-      verify(declarer, times(1)).declare(argThat(FieldsEqualTo(new Fields())))
+      verifyZeroInteractions(declarer)
     }
 
   }

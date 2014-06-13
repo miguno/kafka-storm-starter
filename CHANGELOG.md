@@ -1,6 +1,6 @@
 # 0.1.1 (unreleased)
 
-* TBD
+* AvroKafkaSinkBolt should not declare any output fields because it writes to Kafka only, it does not emit any tuples.
 
 
 # 0.1.0 (May 27, 2014)
