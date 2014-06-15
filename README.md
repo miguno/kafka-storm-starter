@@ -282,8 +282,8 @@ _The instructions below assume you have [Homebrew](http://brew.sh/) installed on
 
 First, install Oracle Java JDK 6 for Mac:
 
-* [Java 6 for Mac OS X](http://support.apple.com/downloads/DL1572/en_US/JavaForOSX2013-05.dmg) aka
-  "Java for OS X 2013-005".  This will give you Java 1.6.0_65.
+* [Java 6 for Mac OS X](http://support.apple.com/kb/dl1572) aka
+  "Java for OS X 2014-001".  This will give you Java 1.6.0_65.
 
 Then, install Scala and sbt:
 
