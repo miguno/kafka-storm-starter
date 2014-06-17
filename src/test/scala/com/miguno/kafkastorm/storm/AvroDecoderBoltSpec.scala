@@ -34,6 +34,7 @@ class AvroDecoderBoltSpec extends FunSpec with Matchers with GivenWhenThen with 
 
       Then("the bolt should read the field 'bytes' from the tuple")
       verify(tuple, times(1)).getBinaryByField("bytes")
+      () // prevent scalac warning about discarded non-Unit value
     }
 
     it("should let the user configure the name of the input field to read from incoming tuples") {
@@ -48,6 +49,7 @@ class AvroDecoderBoltSpec extends FunSpec with Matchers with GivenWhenThen with 
 
       Then("the bolt should read the field 'foobar' from the tuple")
       verify(tuple, times(1)).getBinaryByField("foobar")
+      () // prevent scalac warning about discarded non-Unit value
     }
 
     it("should deserialize binary records into pojos and send the pojos to downstream bolts") {
@@ -63,6 +65,7 @@ class AvroDecoderBoltSpec extends FunSpec with Matchers with GivenWhenThen with 
 
       Then("the bolt should send the decoded Tweet pojo to downstream bolts")
       verify(collector, times(1)).emit(new Values(AnyTweet))
+      () // prevent scalac warning about discarded non-Unit value
     }
 
     it("should skip over tuples that contain invalid binary records") {
