@@ -72,6 +72,7 @@ class AvroDecoderBolt[T <: SpecificRecordBase : Manifest](
       case Success(pojo) =>
         log.debug("Binary data decoded into pojo: " + pojo)
         collector.emit(new Values(pojo))
+        ()
       case Failure(e) => log.error("Could not decode binary data: " + Throwables.getStackTraceAsString(e))
     }
   }
