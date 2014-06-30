@@ -57,9 +57,7 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterEach w
       val brokerConfig = new Properties
       brokerConfig.put("zookeeper.connect", z.connectString)
       kafkaEmbedded = Some(new KafkaEmbedded(brokerConfig))
-      for {k <- kafkaEmbedded} {
-        k.start()
-      }
+      for {k <- kafkaEmbedded} k.start()
 
       // Create test topics
       val sessionTimeout = 30.seconds
