@@ -61,6 +61,8 @@ libraryDependencies ++= Seq(
 libraryDependencies <+= (scalaVersion)("org.scala-lang" % "scala-reflect" % _)
 
 javacOptions in Compile ++= Seq(
+  "-source", "1.6",
+  "-target", "1.6",
   "-Xlint:unchecked",
   "-Xlint:deprecation")
 
