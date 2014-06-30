@@ -2,7 +2,8 @@ package com.miguno.kafkastorm.kafka
 
 import java.io.File
 import java.util.Properties
-import kafka.server.{KafkaServerStartable, KafkaConfig}
+
+import kafka.server.{KafkaConfig, KafkaServerStartable}
 import kafka.utils.Logging
 import org.apache.commons.io.FileUtils
 

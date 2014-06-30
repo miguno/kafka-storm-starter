@@ -1,10 +1,10 @@
 package com.miguno.kafkastorm.integration
 
 import _root_.kafka.utils.Logging
-import backtype.storm.{Config, ILocalCluster, Testing}
 import backtype.storm.testing._
 import backtype.storm.topology.TopologyBuilder
 import backtype.storm.tuple.{Fields, Values}
+import backtype.storm.{Config, ILocalCluster, Testing}
 import org.scalatest._
 
 /**

@@ -1,7 +1,8 @@
 package com.miguno.kafkastorm.kafka
 
-import _root_.kafka.utils.Logging
 import java.util.Properties
+
+import _root_.kafka.utils.Logging
 import org.scalatest.{FunSpec, GivenWhenThen, Matchers}
 
 class KafkaProducerAppSpec extends FunSpec with Matchers with GivenWhenThen with Logging {

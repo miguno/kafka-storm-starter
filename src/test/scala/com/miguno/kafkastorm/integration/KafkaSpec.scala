@@ -1,20 +1,22 @@
 package com.miguno.kafkastorm.integration
 
+import java.util.Properties
+
 import _root_.kafka.message.MessageAndMetadata
 import _root_.kafka.utils.{Logging, ZKStringSerializer}
 import com.miguno.avro.Tweet
-import com.miguno.kafkastorm.kafka.{KafkaProducerApp, ConsumerTaskContext, KafkaConsumer, KafkaEmbedded}
+import com.miguno.kafkastorm.kafka.{ConsumerTaskContext, KafkaConsumer, KafkaEmbedded, KafkaProducerApp}
 import com.miguno.kafkastorm.zookeeper.ZooKeeperEmbedded
 import com.twitter.bijection.Injection
 import com.twitter.bijection.avro.SpecificAvroCodecs
-import java.util.Properties
+import kafka.admin.AdminUtils
 import org.I0Itec.zkclient.ZkClient
 import org.apache.curator.test.InstanceSpec
 import org.scalatest._
+
 import scala.collection.mutable
 import scala.concurrent.duration._
 import scala.language.reflectiveCalls
-import kafka.admin.AdminUtils
 
 @DoNotDiscover
 class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenWhenThen with Logging {

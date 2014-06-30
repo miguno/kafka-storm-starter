@@ -1,13 +1,14 @@
 package com.miguno.kafkastorm.storm
 
+import java.util
+
 import backtype.storm.task.TopologyContext
-import backtype.storm.topology.{BasicOutputCollector, OutputFieldsDeclarer}
 import backtype.storm.topology.base.BaseBasicBolt
+import backtype.storm.topology.{BasicOutputCollector, OutputFieldsDeclarer}
 import backtype.storm.tuple.Tuple
-import com.miguno.kafkastorm.kafka.{KafkaProducerAppFactory, KafkaProducerApp}
+import com.miguno.kafkastorm.kafka.{KafkaProducerApp, KafkaProducerAppFactory}
 import com.twitter.bijection.Injection
 import com.twitter.bijection.avro.SpecificAvroCodecs
-import java.util
 import org.apache.avro.specific.SpecificRecordBase
 import org.slf4j.{Logger, LoggerFactory}
 
@@ -28,8 +29,8 @@ import org.slf4j.{Logger, LoggerFactory}
  *           a subclass of Avro's `SpecificRecordBase`.
  */
 class AvroKafkaSinkBolt[T <: SpecificRecordBase : Manifest](
-  producerFactory: KafkaProducerAppFactory,
-  inputField: String = "pojo")
+                                                             producerFactory: KafkaProducerAppFactory,
+                                                             inputField: String = "pojo")
   extends BaseBasicBolt {
 
   // Note: Ideally we would like to use TypeTag's instead of Manifest's here.  Doing so would only require replacing
@@ -92,9 +93,9 @@ object AvroKafkaSinkBolt {
   }
 
   private def newInstance[T <: SpecificRecordBase](
-    producerFactory: KafkaProducerAppFactory,
-    inputFieldName: String = "pojo")
-    (implicit man: Manifest[T]) =
+                                                    producerFactory: KafkaProducerAppFactory,
+                                                    inputFieldName: String = "pojo")
+                                                  (implicit man: Manifest[T]) =
     new AvroKafkaSinkBolt[T](producerFactory, inputFieldName)
 
 }

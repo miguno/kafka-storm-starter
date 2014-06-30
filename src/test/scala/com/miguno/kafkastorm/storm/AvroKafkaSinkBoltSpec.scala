@@ -1,18 +1,19 @@
 package com.miguno.kafkastorm.storm
 
+import java.util
+
 import backtype.storm.task.TopologyContext
 import backtype.storm.topology.{BasicOutputCollector, OutputFieldsDeclarer}
-import backtype.storm.tuple.{Fields, Tuple}
+import backtype.storm.tuple.Tuple
 import com.miguno.avro.Tweet
 import com.miguno.kafkastorm.kafka.{KafkaProducerApp, KafkaProducerAppFactory}
 import com.twitter.bijection.Injection
 import com.twitter.bijection.avro.SpecificAvroCodecs
-import java.util
 import org.mockito.AdditionalMatchers
-import org.mockito.Matchers.argThat
 import org.mockito.Mockito.{when => mwhen, _}
-import org.scalatest.{FunSpec, GivenWhenThen, Matchers}
 import org.scalatest.mock.MockitoSugar
+import org.scalatest.{FunSpec, GivenWhenThen, Matchers}
+
 import scala.concurrent.duration._
 
 class AvroKafkaSinkBoltSpec extends FunSpec with Matchers with GivenWhenThen with MockitoSugar {
