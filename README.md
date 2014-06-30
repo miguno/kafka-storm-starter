@@ -90,11 +90,11 @@ test output:
 [info]     And a Storm topology that uses AvroDecoderBolt and that reads tweets from topic testing-input and writes them as-is to topic testing-output
 [info]     And some tweets
 [info]     And a synchronous Kafka producer app that writes to the topic testing-input
-[info]     And a single-threaded Kafka consumer app that reads from topic testing-output
+[info]     And a single-threaded Kafka consumer app that reads from topic testing-output and Avro-decodes the incoming data
 [info]     And a Storm topology configuration that registers an Avro Kryo decorator for Tweet
 [info]     When I run the Storm topology
-[info]     And I use the Kafka producer app to Avro-encode the tweets and sent them to Kafka
-[info]     Then the Kafka consumer app should receive the decoded, original tweets from the Storm topology
+[info]     And I Avro-encode the tweets and use the Kafka producer app to sent them to Kafka
+[info]     Then the Kafka consumer app should receive the original tweets from the Storm topology
 [info] Feature: AvroScheme[T] for Kafka spout
 [info]   Scenario: User creates a Storm topology that uses AvroScheme in Kafka spout
 [info]     Given a ZooKeeper instance
@@ -102,17 +102,17 @@ test output:
 [info]     And a Storm topology that uses AvroScheme and that reads tweets from topic testing-input and writes them as-is to topic testing-output
 [info]     And some tweets
 [info]     And a synchronous Kafka producer app that writes to the topic testing-input
-[info]     And a single-threaded Kafka consumer app that reads from topic testing-output
+[info]     And a single-threaded Kafka consumer app that reads from topic testing-output and Avro-decodes the incoming data
 [info]     And a Storm topology configuration that registers an Avro Kryo decorator for Tweet
 [info]     When I run the Storm topology
-[info]     And I use the Kafka producer app to Avro-encode the tweets and sent them to Kafka
-[info]     Then the Kafka consumer app should receive the decoded, original tweets from the Storm topology
-[info] Run completed in 21 seconds, 852 milliseconds.
+[info]     And I Avro-encode the tweets and use the Kafka producer app to sent them to Kafka
+[info]     Then the Kafka consumer app should receive the original tweets from the Storm topology
+[info] Run completed in 23 seconds, 111 milliseconds.
 [info] Total number of tests run: 25
 [info] Suites: completed 8, aborted 0
 [info] Tests: succeeded 25, failed 0, canceled 0, ignored 0, pending 0
 [info] All tests passed.
-[success] Total time: 22 s, completed May 23, 2014 12:31:09 PM
+[success] Total time: 34 s, completed Jun 30, 2014 11:07:22 AM
 ```
 
 
@@ -152,9 +152,9 @@ Kafka topic.
 
 Note that this example will actually run _two_ in-memory instances of ZooKeeper:  the first (listening at
 `127.0.0.1:2181/tcp`) is used by the Kafka instance, the second (listening at `127.0.0.1:2000/tcp`) is automatically
-started and used by the in-memory Storm cluster.  This is because, when running in local aka in-memory mode, Storm does
-not allow you to reconfigure or disable its own ZooKeeper instance (see the [Storm FAQ](#FAQ-Storm) below for further
-information).
+started and used by the in-memory Storm cluster.  This is because, when running in local aka in-memory mode, Storm
+versions < 0.9.3 do not allow you to reconfigure or disable its own ZooKeeper instance (see the
+[Storm FAQ](#FAQ-Storm) below for further information).
 
 **To stop the demo application you must kill or `Ctrl-C` the process in the terminal.**
 
@@ -162,7 +162,6 @@ You can use [KafkaStormDemo](src/main/scala/com/miguno/kafkastorm/storm/KafkaSto
 create your own, "real" Storm topologies that read from a "real" Kafka, Storm, and ZooKeeper infrastructure.  An easy
 way to get started with such an infrastructure is by deploying Kafka, Storm, and ZooKeeper via a tool such as
 [Wirbelsturm](https://github.com/miguno/wirbelsturm).
-
 
 
 <a name="Features"></a>
@@ -235,16 +234,9 @@ What features do we showcase in kafka-storm-starter?  Note that we focus on show
   [custom Kryo serializer for Storm](src/main/scala/com/miguno/kafkastorm/storm/TweetAvroKryoDecorator.scala) that
   handles our Avro-derived Java class `Tweet` from [twitter.avsc](src/main/avro/twitter.avsc).
 * Unit and integration tests are implemented with [ScalaTest](http://scalatest.org/).
-* We use [ZooKeeper 3.3.4](https://zookeeper.apache.org/) instead of the latest version 3.4.5.
-  See section _Known issues_ below for why we do that.
-* We use the Kafka spout [wurstmeister/storm-kafka-0.8-plus](https://github.com/wurstmeister/storm-kafka-0.8-plus).
-  Unfortunately that spout is not yet released for Scala 2.10.  For that reason [@miguno](https://github.com/miguno/)
-  has [forked and branched](https://github.com/miguno/storm-kafka-0.8-plus/tree/miguno_clojars) the code to add Scala
-  2.10 support, and released such a version to [Clojars](https://clojars.org/com.miguno/storm-kafka-0.8-plus_2.10).
-  See [build.sbt](build.sbt) for details.
-    * _Once Storm 0.9.2 is released we will migrate to the new_
-      _[Kafka spout that ships with Storm](https://github.com/apache/incubator-storm/tree/master/external/storm-kafka)_
-      _(which is based on the spout developed by wurstmeister)._
+* We use [ZooKeeper 3.4.5](https://zookeeper.apache.org/).
+* We use the [official Kafka spout](https://github.com/apache/incubator-storm/tree/master/external/storm-kafka) of the
+  Storm project, which is compatible with Kafka 0.8.
 
 
 <a name="Development"></a>
@@ -433,25 +425,25 @@ To create a normal ("slim") jar:
 
     $ ./sbt clean package
 
-    >>> Generates `target/scala-2.10/kafka-storm-starter_2.10-0.1.0-SNAPSHOT.jar`
+    >>> Generates `target/scala-2.10/kafka-storm-starter_2.10-0.2.0-SNAPSHOT.jar`
 
 To create a fat jar, which includes any dependencies of kafka-storm-starter:
 
     $ ./sbt assembly
 
-    >>> Generates `target/scala-2.10/kafka-storm-starter-assembly-0.1.0-SNAPSHOT.jar`
+    >>> Generates `target/scala-2.10/kafka-storm-starter-assembly-0.2.0-SNAPSHOT.jar`
 
 To create a scaladoc/javadoc jar:
 
     $ ./sbt packageDoc
 
-    >>> Generates `target/scala-2.10/kafka-storm-starter_2.10-0.1.0-SNAPSHOT-javadoc.jar`
+    >>> Generates `target/scala-2.10/kafka-storm-starter_2.10-0.2.0-SNAPSHOT-javadoc.jar`
 
 To create a sources jar:
 
     $ ./sbt packageSrc
 
-    >>> Generates `target/scala-2.10/kafka-storm-starter_2.10-0.1.0-SNAPSHOT-sources.jar`
+    >>> Generates `target/scala-2.10/kafka-storm-starter_2.10-0.2.0-SNAPSHOT-sources.jar`
 
 To create API docs:
 
@@ -517,14 +509,6 @@ Then use the _Import Wizard_ in Eclipse to import _Existing Projects into Worksp
 
 ## Kafka
 
-### Where do the unit tests store broker logs in the local filesystem?
-
-The in-memory Kafka instances that are launched by the unit tests store their Kafka "log" files (i.e. the files that
-contain the messages that are being sent to the Kafka topics) under `/tmp/kafka-logs/`.
-
-You may need to manually remove this directory in case you want start from a clean state.  At the moment the unit tests
-do not remove this directory for you.
-
 ### ZooKeeper exceptions "KeeperException: NoNode for /[ZK path]" logged at INFO level
 
 In short you can normally safely ignore those errors -- it's for a reason they are logged at INFO level and not at ERROR
@@ -567,11 +551,12 @@ for details):
 
 where `zk-port` is the final port chosen.
 
-As of May 2014 it is not possible to launch a local Storm cluster via `LocalCluster` without its own embedded ZooKeeper.
-Likewise it is not possible to control on which port the embedded ZooKeeper process will listen -- it will always follow
-the `2000/tcp` based algorithm above to set the port.  A JIRA ticket was opened to untangle this hard wiring between
-`LocalCluster` and ZooKeeper, cf.
-[STORM-213: Decouple In-Process ZooKeeper from LocalCluster](https://issues.apache.org/jira/browse/STORM-213).
+In Storm versions <= 0.9.2 it is not possible to launch a local Storm cluster via `LocalCluster` without its own embedded
+ZooKeeper.  Likewise it is not possible to control on which port the embedded ZooKeeper process will listen -- it will
+always follow the `2000/tcp` based algorithm above to set the port.
+
+In Storm 0.9.3 and later you can configure `LocalCluster` to use a custom ZooKeeper instance, thanks to
+[STORM-213](https://issues.apache.org/jira/browse/STORM-213).
 
 
 <a name="Known-issues"></a>
@@ -586,22 +571,11 @@ own code.
 
 ## Upstream code
 
-### Kryo version conflict in Storm
-
-_Note: This problem is resolved in the upcoming 0.9.2 version of Storm._
-
-There is a Kryo version conflict between Storm 0.9.1 (uses Kryo 2.17) and Twitter Chill (uses Kryo 2.21).
-
-In this code project we use the workaround to exclude Kryo (2.21) from the Twitter Chill dependency, but this may not
-be a universal workaround.  Twitter have apparently run into data corruption issues with Kryo 2.17, and for that reason
-have built their own version of Storm using Kryo 2.21.
-See [CHILL-173: Kryo version conflict between Chill and Storm 0.9.1-incubating causes Avro serialization to fail](https://github.com/twitter/chill/issues/173)
-for details.
-
-
 ### ZooKeeper throws InstanceAlreadyExistsException during tests
 
-You will see the following exception when running the integration tests, which you can safely ignore:
+_Note: We squelch this message during test runs.  See [log4j.properties](src/test/resources/log4.properties)._
+
+You may see the following exception when running the integration tests, which you can safely ignore:
 
     [2014-03-07 11:56:59,250] WARN Failed to register with JMX (org.apache.zookeeper.server.ZooKeeperServer)
     javax.management.InstanceAlreadyExistsException: org.apache.ZooKeeperService:name0=StandaloneServer_port-1
@@ -611,50 +585,31 @@ The root cause is that in-memory ZooKeeper instances have a hardcoded JMX setup.
 instances trying to use the same JMX setup.  Since the JMX setup is not relevant for our testing the exception can be
 safely ignored, albeit we'd prefer to come up with a proper fix, of course.
 
+See also [ZOOKEEPER-1350: Make JMX registration optional in LearnerZooKeeperServer](https://issues.apache.org/jira/browse/ZOOKEEPER-1350),
+which will make it possible to disable JMX registration when using Curator's `TestServer` to run an in-memory ZooKeeper
+instance (this patch will be included in ZooKeeper 3.5.0, see JIRA ticket above).
 
-### ZooKeeper version 3.3.x recommended for use with Storm 0.9.1 and Kafka 0.8.x
 
-_Note: The upcoming version 0.9.2 of Storm uses ZooKeeper 3.4.5._
+### ZooKeeper version 3.3.4 recommended for use with Kafka 0.8
 
-At the time of writing both Storm (<= 0.9.1) and Kafka (<= 0.8.1.1) are not officially compatible with ZooKeeper 3.4.x
-yet, which is the latest stable version of ZooKeeper.  Instead the use of ZooKeeper 3.3.x is recommended.
+At the time of writing Kafka 0.8 is not officially compatible with ZooKeeper 3.4.x, which is the latest stable version
+of ZooKeeper.  Instead the Kafka project
+[recommends ZooKeeper 3.3.4](https://kafka.apache.org/documentation.html#zkversion).
 
 So which version of ZooKeeper should you do pick, particularly if you are already running a ZooKeeper cluster for other
 parts of your infrastructure (such as an Hadoop cluster)?
 
 **The TL;DR version is:**  Try using ZooKeeper 3.4.5 for both Kafka and Storm, but see the caveats and workarounds
-below.  If you do run into problems, consider downgrading to ZooKeeper 3.3.6.  If that fails, too, try 3.3.4.  In the
-worst case use separate ZooKeeper clusters/versions for Storm (3.3.3) and Kafka (3.3.4).
+below.  In the worst case use separate ZooKeeper clusters/versions for Storm (3.4.5) and Kafka (3.3.4).  Generally
+speaking though, the best 3.3.x version of ZooKeeper is 3.3.6, which is the latest stable 3.3.x version.  This is
+because 3.3.6 fixed a number of serious bugs that could lead to data corruption.
 
-**The longer version is:**  Storm versions up to and including 0.9.1 want ZK 3.3.3, but the upcoming 0.9.2 version
-relies on ZooKeeper 3.4.x.
-[All current versions of Kafka still prefer ZK 3.3.4](https://kafka.apache.org/documentation.html#zkversion).
-Generally speaking though, the best 3.3.x version of ZooKeeper is 3.3.6, which is the latest stable 3.3.x version.  This
-is because 3.3.6 fixed a number of serious bugs that could lead to data corruption.
+_Tip: You can verify the exact ZK version used in kafka-storm-starter by running `./sbt dependency-graph`._
 
-_Tip: You can verify against which ZK version the code in this project is actually built by running_
-_`./sbt dependency-graph`._
+Notes:
 
-**The really long version is:**  In the _code and tests_ of this project we cannot use ZK 3.4.x just yet because Storm
-0.9.1 is not 100% incompatible with ZK 3.4.x.  For instance, Storm will throw errors if you try to run a Storm
-`LocalCluster` (for unit testing) against ZK 3.4.x.  At the same time, and somewhat surprisingly, you can run a "real"
-Storm cluster against ZK 3.4.x.  For instance, Netflix have reportedly been using ZK 3.4.5 in production since some
-time.
-
-* Storm and ZooKeeper: Storm versions up to and including 0.9.1 are built against ZooKeeper 3.3.3 because of Storm's
-  dependency on [Netflix Curator 1.0.1](https://github.com/Netflix/curator).  These versions of Zookeeper and Curator
-  are very old, and the upcoming Storm 0.9.2 therefore switches to Apache Curator 2.4.0 with ZooKeeper 3.4.x.
-* Kafka and ZooKeeper: LinkedIn recommend the use of ZK 3.3.x but warn against the use of 3.3.3 because that
-  version has known serious issues regarding ephemeral node deletion and session expirations.  For these reasons
-  LinkedIn run ZK 3.3.4 in production.
-  See [ZooKeeper version](https://kafka.apache.org/documentation.html#zkversion) in the Kafka documentation.
-  Lastly, there is an open Kafka JIRA ticket that covers upgrading Kafka to ZK 3.4.5, see
+* There is an open Kafka JIRA ticket that covers upgrading Kafka to ZK 3.4.5, see
   [KAFKA-854: Upgrade dependencies for 0.8](https://issues.apache.org/jira/browse/KAFKA-854).
-* Storm and Cloudera CDH 4.5:
-    * [Storm cannot run in combination with a recent Hadoop/HBase version](http://mail-archives.apache.org/mod_mbox/storm-user/201402.mbox/%3CCADoiZqom8Wuzi9uiqT4d01cTNn2r_nOmXyZyCSqEko-vOyrQBA@mail.gmail.com%3E)
-      -- The author ran into problems when using Storm in combination with Cloudera CDH 4.  It looks as if he is trying
-      to build a code project that lists both Storm and Hadoop/HBase as its dependencies (similar to how we combine
-      Storm with Kafka), and due to that runs into ZooKeeper version conflicts as CDH 4 runs ZooKeeper 3.4.5.
 * If in a production environment you run into problems when using ZooKeeper 3.4.5 with Storm <= 0.9.1, you can try
   a [workaround using Google jarjar](https://groups.google.com/forum/#!topic/storm-user/TVVF_jqvD_A) in order to
   deploy ZooKeeper 3.4.5 alongside Storm's/Curator's hard dependency on ZooKeeper 3.3.3.

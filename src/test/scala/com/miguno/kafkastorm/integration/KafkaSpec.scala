@@ -1,33 +1,36 @@
 package com.miguno.kafkastorm.integration
 
+import java.util.Properties
+
 import _root_.kafka.message.MessageAndMetadata
 import _root_.kafka.utils.{Logging, ZKStringSerializer}
 import com.miguno.avro.Tweet
-import com.miguno.kafkastorm.kafka.{KafkaProducerApp, ConsumerTaskContext, KafkaConsumer, KafkaEmbedded}
+import com.miguno.kafkastorm.kafka.{ConsumerTaskContext, KafkaConsumer, KafkaEmbedded, KafkaProducerApp}
 import com.miguno.kafkastorm.zookeeper.ZooKeeperEmbedded
 import com.twitter.bijection.Injection
 import com.twitter.bijection.avro.SpecificAvroCodecs
-import java.util.Properties
+import kafka.admin.AdminUtils
 import org.I0Itec.zkclient.ZkClient
+import org.apache.curator.test.InstanceSpec
 import org.scalatest._
+
 import scala.collection.mutable
 import scala.concurrent.duration._
 import scala.language.reflectiveCalls
-import kafka.admin.AdminUtils
 
 @DoNotDiscover
 class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenWhenThen with Logging {
 
+  implicit val specificAvroBinaryInjectionForTweet = SpecificAvroCodecs.toBinary[Tweet]
+
   private val testTopic = "testing"
   private val testTopicNumPartitions = 1
   private val testTopicReplicationFactor = 1
-  private val zookeeperPort = 2181
+  private val zookeeperPort = InstanceSpec.getRandomPort
 
   private var zookeeperEmbedded: Option[ZooKeeperEmbedded] = None
   private var zkClient: Option[ZkClient] = None
   private var kafkaEmbedded: Option[KafkaEmbedded] = None
-
-  implicit val specificAvroBinaryInjectionForTweet = SpecificAvroCodecs.toBinary[Tweet]
 
   override def beforeAll() {
     // Start embedded ZooKeeper server
@@ -116,7 +119,7 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
             }
           })
         val waitForConsumerStartup = 300.millis
-        debug(s"Waiting $waitForConsumerStartup ms for Kafka consumer threads to launch")
+        debug(s"Waiting $waitForConsumerStartup for Kafka consumer threads to launch")
         Thread.sleep(waitForConsumerStartup.toMillis)
         debug("Finished waiting for Kafka consumer threads to launch")
 
@@ -139,7 +142,7 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
 
         Then("the consumer app should receive the tweets")
         val waitForConsumerToReadStormOutput = 300.millis
-        debug(s"Waiting $waitForConsumerToReadStormOutput ms for Kafka consumer threads to read messages")
+        debug(s"Waiting $waitForConsumerToReadStormOutput for Kafka consumer threads to read messages")
         Thread.sleep(waitForConsumerToReadStormOutput.toMillis)
         debug("Finished waiting for Kafka consumer threads to read messages")
         actualTweets.toSeq should be(f.messages.toSeq)
@@ -181,7 +184,7 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
             }
           })
         val waitForConsumerStartup = 300.millis
-        debug(s"Waiting $waitForConsumerStartup ms for Kafka consumer threads to launch")
+        debug(s"Waiting $waitForConsumerStartup for Kafka consumer threads to launch")
         Thread.sleep(waitForConsumerStartup.toMillis)
         debug("Finished waiting for Kafka consumer threads to launch")
 
@@ -207,7 +210,7 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
 
         Then("the consumer app should receive the tweets")
         val waitForConsumerToReadStormOutput = 300.millis
-        debug(s"Waiting $waitForConsumerToReadStormOutput ms for Kafka consumer threads to read messages")
+        debug(s"Waiting $waitForConsumerToReadStormOutput for Kafka consumer threads to read messages")
         Thread.sleep(waitForConsumerToReadStormOutput.toMillis)
         debug("Finished waiting for Kafka consumer threads to read messages")
         actualTweets.toSeq should be(f.messages.toSeq)

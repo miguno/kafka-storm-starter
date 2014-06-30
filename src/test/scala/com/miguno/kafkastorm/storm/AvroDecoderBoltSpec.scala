@@ -7,8 +7,9 @@ import com.twitter.bijection.Injection
 import com.twitter.bijection.avro.SpecificAvroCodecs
 import org.mockito.Matchers._
 import org.mockito.Mockito.{when => mwhen, _}
-import org.scalatest.{FunSpec, GivenWhenThen, Matchers}
 import org.scalatest.mock.MockitoSugar
+import org.scalatest.{FunSpec, GivenWhenThen, Matchers}
+
 import scala.concurrent.duration._
 
 class AvroDecoderBoltSpec extends FunSpec with Matchers with GivenWhenThen with MockitoSugar {

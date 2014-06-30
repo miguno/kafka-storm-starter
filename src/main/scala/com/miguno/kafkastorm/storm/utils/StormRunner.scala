@@ -1,7 +1,8 @@
 package com.miguno.kafkastorm.storm.utils
 
-import backtype.storm.{Config, StormSubmitter, LocalCluster}
 import backtype.storm.generated.StormTopology
+import backtype.storm.{Config, LocalCluster, StormSubmitter}
+
 import scala.concurrent.duration._
 
 /**

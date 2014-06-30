@@ -4,11 +4,12 @@ import backtype.storm.topology.base.BaseBasicBolt
 import backtype.storm.topology.{BasicOutputCollector, OutputFieldsDeclarer}
 import backtype.storm.tuple.{Fields, Tuple, Values}
 import com.google.common.base.Throwables
-import com.twitter.bijection.avro.SpecificAvroCodecs
 import com.twitter.bijection.Injection
+import com.twitter.bijection.avro.SpecificAvroCodecs
 import org.apache.avro.specific.SpecificRecordBase
 import org.slf4j.{Logger, LoggerFactory}
-import scala.util.{Try, Failure, Success}
+
+import scala.util.{Failure, Success, Try}
 
 /**
  * An binaryAvro->pojoAvro converter bolt.
@@ -37,8 +38,8 @@ import scala.util.{Try, Failure, Success}
  *           a subclass of Avro's `SpecificRecordBase`.
  */
 class AvroDecoderBolt[T <: SpecificRecordBase : Manifest](
-  inputField: String = "bytes",
-  outputField: String = "pojo")
+                                                           inputField: String = "bytes",
+                                                           outputField: String = "pojo")
   extends BaseBasicBolt {
 
   // Note: Ideally we would like to use TypeTag's instead of Manifest's here.  Doing so would only require replacing

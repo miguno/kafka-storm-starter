@@ -5,6 +5,7 @@ import backtype.storm.tuple.{Fields, Values}
 import com.twitter.bijection.Injection
 import com.twitter.bijection.avro.SpecificAvroCodecs
 import org.apache.avro.specific.SpecificRecordBase
+
 import scala.util.{Failure, Success}
 
 /**
