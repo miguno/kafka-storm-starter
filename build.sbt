@@ -69,7 +69,12 @@ parallelExecution in ThisBuild := false
 // Write test results to file in JUnit XML format
 testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-u", "target/test-reports/junitxml")
 
-// Write test results to console/stdout
+// Write test results to console.
+//
+// Tip: If you need to troubleshoot test runs, it helps to use the following reporting setup for ScalaTest.
+//
+//    testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oUDT", "-eUDT")
+//
 testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-o")
 
 // See https://github.com/scoverage/scalac-scoverage-plugin
