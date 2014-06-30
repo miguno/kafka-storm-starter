@@ -31,6 +31,6 @@ class ZooKeeperEmbedded(port: Int = 2181) extends Logging {
    *
    * You can use this to e.g. tell Kafka and Storm how to connect to this instance.
    */
-  val connectString = server.getConnectString
+  val connectString: String = server.getConnectString
 
 }
