@@ -64,7 +64,7 @@ scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-Ywarn-value-di
 
 publishArtifact in Test := false
 
-parallelExecution in Test := false
+parallelExecution in ThisBuild := false
 
 // Write test results to file in JUnit XML format
 testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-u", "target/test-reports/junitxml")
