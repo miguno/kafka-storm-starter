@@ -10,7 +10,7 @@ import org.apache.curator.test.TestingServer
  *
  * @param port The port (aka `clientPort`) to listen to.  Default: 2181.
  */
-class ZooKeeperEmbedded(port: Int) extends Logging {
+class ZooKeeperEmbedded(port: Int = 2181) extends Logging {
 
   debug(s"Starting embedded ZooKeeper server on port ${port}...")
 
