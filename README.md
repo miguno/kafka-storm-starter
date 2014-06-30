@@ -592,6 +592,10 @@ The root cause is that in-memory ZooKeeper instances have a hardcoded JMX setup.
 instances trying to use the same JMX setup.  Since the JMX setup is not relevant for our testing the exception can be
 safely ignored, albeit we'd prefer to come up with a proper fix, of course.
 
+See also [ZOOKEEPER-1350: Make JMX registration optional in LearnerZooKeeperServer](https://issues.apache.org/jira/browse/ZOOKEEPER-1350),
+which will make it possible to disable JMX registration when using Curator's `TestServer` to run an in-memory ZooKeeper
+instance (this patch will be included in ZooKeeper 3.5.0, see JIRA ticket above).
+
 
 ### ZooKeeper version 3.3.4 recommended for use with Kafka 0.8
 
