@@ -19,9 +19,7 @@ net.virtualvoid.sbt.graph.Plugin.graphSettings
 
 resolvers ++= Seq(
   "typesafe-repository" at "http://repo.typesafe.com/typesafe/releases/",
-  "clojars-repository" at "https://clojars.org/repo",
-  // For retrieving Kafka release artifacts directly from Apache.  The artifacts are also available via Maven Central.
-  "Apache releases" at "https://repository.apache.org/content/repositories/releases/"
+  "clojars-repository" at "https://clojars.org/repo"
 )
 
 libraryDependencies ++= Seq(
