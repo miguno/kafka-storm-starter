@@ -257,6 +257,7 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterEach w
         }
       })
     val waitForConsumerStartup = 300.millis
+    debug(s"Waiting $waitForConsumerStartup for the Kafka consumer to start up")
     Thread.sleep(waitForConsumerStartup.toMillis)
 
     And("a Storm topology configuration that registers an Avro Kryo decorator for Tweet")
@@ -299,8 +300,9 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterEach w
       override def run(stormCluster: ILocalCluster) {
         val topologyName = "storm-kafka-integration-test"
         stormCluster.submitTopology(topologyName, topologyConfig, topology)
-        val waitForTopologyStartupMs = 3.seconds.toMillis
-        Thread.sleep(waitForTopologyStartupMs)
+        val waitForTopologyStartup = 3.seconds
+        debug(s"Waiting $waitForTopologyStartup for Storm topology to start up")
+        Thread.sleep(waitForTopologyStartup.toMillis)
 
         And("I Avro-encode the tweets and use the Kafka producer app to sent them to Kafka")
         tweets foreach {
@@ -310,13 +312,15 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterEach w
             producerApp.send(bytes)
         }
 
-        val waitForStormToReadFromKafka = 1.seconds
+        val waitForStormToReadFromKafka = 1.second
+        debug(s"Waiting $waitForStormToReadFromKafka for Storm to read from Kafka")
         Thread.sleep(waitForStormToReadFromKafka.toMillis)
       }
     })
 
     Then("the Kafka consumer app should receive the original tweets from the Storm topology")
     val waitForConsumerToReadStormOutput = 300.millis
+    debug(s"Waiting $waitForConsumerToReadStormOutput for Kafka consumer to read Storm output from Kafka")
     Thread.sleep(waitForConsumerToReadStormOutput.toMillis)
     actualTweets.toSeq should be(tweets.toSeq)
 
