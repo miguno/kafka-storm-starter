@@ -33,6 +33,8 @@ import scala.language.reflectiveCalls
 @DoNotDiscover
 class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterEach with GivenWhenThen with Logging {
 
+  implicit val specificAvroBinaryInjectionForTweet = SpecificAvroCodecs.toBinary[Tweet]
+
   private val inputTopic = "testing-input"
   private val inputTopicNumPartitions = 1
   private val inputTopicReplicationFactor = 1
@@ -43,8 +45,6 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterEach w
   private var zookeeperEmbedded: Option[ZooKeeperEmbedded] = None
   private var zkClient: Option[ZkClient] = None
   private var kafkaEmbedded: Option[KafkaEmbedded] = None
-
-  implicit val specificAvroBinaryInjectionForTweet = SpecificAvroCodecs.toBinary[Tweet]
 
   override def beforeEach() {
     // Start embedded ZooKeeper server

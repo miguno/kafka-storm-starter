@@ -19,6 +19,8 @@ import kafka.admin.AdminUtils
 @DoNotDiscover
 class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenWhenThen with Logging {
 
+  implicit val specificAvroBinaryInjectionForTweet = SpecificAvroCodecs.toBinary[Tweet]
+
   private val testTopic = "testing"
   private val testTopicNumPartitions = 1
   private val testTopicReplicationFactor = 1
@@ -27,8 +29,6 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
   private var zookeeperEmbedded: Option[ZooKeeperEmbedded] = None
   private var zkClient: Option[ZkClient] = None
   private var kafkaEmbedded: Option[KafkaEmbedded] = None
-
-  implicit val specificAvroBinaryInjectionForTweet = SpecificAvroCodecs.toBinary[Tweet]
 
   override def beforeAll() {
     // Start embedded ZooKeeper server
