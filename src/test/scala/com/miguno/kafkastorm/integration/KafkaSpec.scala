@@ -117,7 +117,7 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
             }
           })
         val waitForConsumerStartup = 300.millis
-        debug(s"Waiting $waitForConsumerStartup ms for Kafka consumer threads to launch")
+        debug(s"Waiting $waitForConsumerStartup for Kafka consumer threads to launch")
         Thread.sleep(waitForConsumerStartup.toMillis)
         debug("Finished waiting for Kafka consumer threads to launch")
 
@@ -140,7 +140,7 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
 
         Then("the consumer app should receive the tweets")
         val waitForConsumerToReadStormOutput = 300.millis
-        debug(s"Waiting $waitForConsumerToReadStormOutput ms for Kafka consumer threads to read messages")
+        debug(s"Waiting $waitForConsumerToReadStormOutput for Kafka consumer threads to read messages")
         Thread.sleep(waitForConsumerToReadStormOutput.toMillis)
         debug("Finished waiting for Kafka consumer threads to read messages")
         actualTweets.toSeq should be(f.messages.toSeq)
@@ -182,7 +182,7 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
             }
           })
         val waitForConsumerStartup = 300.millis
-        debug(s"Waiting $waitForConsumerStartup ms for Kafka consumer threads to launch")
+        debug(s"Waiting $waitForConsumerStartup for Kafka consumer threads to launch")
         Thread.sleep(waitForConsumerStartup.toMillis)
         debug("Finished waiting for Kafka consumer threads to launch")
 
@@ -208,7 +208,7 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
 
         Then("the consumer app should receive the tweets")
         val waitForConsumerToReadStormOutput = 300.millis
-        debug(s"Waiting $waitForConsumerToReadStormOutput ms for Kafka consumer threads to read messages")
+        debug(s"Waiting $waitForConsumerToReadStormOutput for Kafka consumer threads to read messages")
         Thread.sleep(waitForConsumerToReadStormOutput.toMillis)
         debug("Finished waiting for Kafka consumer threads to read messages")
         actualTweets.toSeq should be(f.messages.toSeq)
