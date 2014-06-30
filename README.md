@@ -153,7 +153,7 @@ Kafka topic.
 Note that this example will actually run _two_ in-memory instances of ZooKeeper:  the first (listening at
 `127.0.0.1:2181/tcp`) is used by the Kafka instance, the second (listening at `127.0.0.1:2000/tcp`) is automatically
 started and used by the in-memory Storm cluster.  This is because, when running in local aka in-memory mode, Storm
-versions <= 0.9.2 do not allow you to reconfigure or disable its own ZooKeeper instance (see the
+versions < 0.9.3 do not allow you to reconfigure or disable its own ZooKeeper instance (see the
 [Storm FAQ](#FAQ-Storm) below for further information).
 
 **To stop the demo application you must kill or `Ctrl-C` the process in the terminal.**
