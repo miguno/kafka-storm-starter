@@ -43,8 +43,9 @@ libraryDependencies ++= Seq(
     exclude("org.slf4j", "log4j-over-slf4j"),
   "org.apache.storm" % "storm-kafka" % "0.9.2-incubating"
     exclude("org.apache.zookeeper", "zookeeper"),
+  "com.101tec" % "zkclient" % "0.4"
+    exclude("org.apache.zookeeper", "zookeeper"),
   "org.apache.curator" % "curator-test" % "2.4.0",
-  "com.101tec" % "zkclient" % "0.4",
   // Logback with slf4j facade
   "ch.qos.logback" % "logback-classic" % "1.1.2",
   "ch.qos.logback" % "logback-core" % "1.1.2",
