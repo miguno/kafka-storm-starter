@@ -77,8 +77,8 @@ class StormSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
       Testing.withSimulatedTimeLocalCluster(mkClusterParam, new TestJob() {
         override def run(stormCluster: ILocalCluster) {
           // `completeTopology()` takes your topology, cluster, and configuration.  It will mock out the spouts you
-          // specify, and will run the topology until it is idle and all tuples from the spouts have been either acked or
-          // failed, and return all the tuples that have been emitted from all the topology components.
+          // specify, and will run the topology until it is idle and all tuples from the spouts have been either acked
+          // or failed, and return all the tuples that have been emitted from all the topology components.
           result = Some(Testing.completeTopology(stormCluster, topology, completeTopologyParam))
         }
       })
