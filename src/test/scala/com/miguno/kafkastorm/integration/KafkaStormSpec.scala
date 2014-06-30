@@ -293,6 +293,7 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterEach w
       //stormClusterConfig.put(Config.STORM_ZOOKEEPER_SERVERS, List(zookeeper.hostname).asJava)
       //stormClusterConfig.put(Config.STORM_ZOOKEEPER_PORT, zookeeper.port: Integer)
 
+      debug(s"Storm cluster configuration: $stormClusterConfig")
       mkClusterParam.setDaemonConf(stormClusterConfig)
       mkClusterParam
     }
