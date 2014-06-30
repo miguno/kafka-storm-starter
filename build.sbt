@@ -60,6 +60,8 @@ libraryDependencies ++= Seq(
 // merely as a test dependency), which we need for TypeTag usage.
 libraryDependencies <+= (scalaVersion)("org.scala-lang" % "scala-reflect" % _)
 
+javacOptions in Compile ++= Seq("-Xlint:deprecation")
+
 scalacOptions ++= Seq(
   "-unchecked",
   "-deprecation",
