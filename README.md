@@ -509,15 +509,6 @@ Then use the _Import Wizard_ in Eclipse to import _Existing Projects into Worksp
 
 ## Kafka
 
-### Where do the unit tests store broker logs in the local filesystem?
-
-The in-memory Kafka instances that are launched by the unit tests store their Kafka "log" files (i.e. the files that
-contain the messages that are being sent to the Kafka topics) under `/tmp/kafka-logs/`.
-
-You may need to manually remove this directory in case you want start from a clean state.  At the moment the unit tests
-do not remove this directory for you.
-
-
 ### ZooKeeper exceptions "KeeperException: NoNode for /[ZK path]" logged at INFO level
 
 In short you can normally safely ignore those errors -- it's for a reason they are logged at INFO level and not at ERROR
