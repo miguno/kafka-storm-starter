@@ -90,11 +90,11 @@ test output:
 [info]     And a Storm topology that uses AvroDecoderBolt and that reads tweets from topic testing-input and writes them as-is to topic testing-output
 [info]     And some tweets
 [info]     And a synchronous Kafka producer app that writes to the topic testing-input
-[info]     And a single-threaded Kafka consumer app that reads from topic testing-output
+[info]     And a single-threaded Kafka consumer app that reads from topic testing-output and Avro-decodes the incoming data
 [info]     And a Storm topology configuration that registers an Avro Kryo decorator for Tweet
 [info]     When I run the Storm topology
-[info]     And I use the Kafka producer app to Avro-encode the tweets and sent them to Kafka
-[info]     Then the Kafka consumer app should receive the decoded, original tweets from the Storm topology
+[info]     And I Avro-encode the tweets and use the Kafka producer app to sent them to Kafka
+[info]     Then the Kafka consumer app should receive the original tweets from the Storm topology
 [info] Feature: AvroScheme[T] for Kafka spout
 [info]   Scenario: User creates a Storm topology that uses AvroScheme in Kafka spout
 [info]     Given a ZooKeeper instance
@@ -102,17 +102,17 @@ test output:
 [info]     And a Storm topology that uses AvroScheme and that reads tweets from topic testing-input and writes them as-is to topic testing-output
 [info]     And some tweets
 [info]     And a synchronous Kafka producer app that writes to the topic testing-input
-[info]     And a single-threaded Kafka consumer app that reads from topic testing-output
+[info]     And a single-threaded Kafka consumer app that reads from topic testing-output and Avro-decodes the incoming data
 [info]     And a Storm topology configuration that registers an Avro Kryo decorator for Tweet
 [info]     When I run the Storm topology
-[info]     And I use the Kafka producer app to Avro-encode the tweets and sent them to Kafka
-[info]     Then the Kafka consumer app should receive the decoded, original tweets from the Storm topology
-[info] Run completed in 21 seconds, 852 milliseconds.
+[info]     And I Avro-encode the tweets and use the Kafka producer app to sent them to Kafka
+[info]     Then the Kafka consumer app should receive the original tweets from the Storm topology
+[info] Run completed in 23 seconds, 111 milliseconds.
 [info] Total number of tests run: 25
 [info] Suites: completed 8, aborted 0
 [info] Tests: succeeded 25, failed 0, canceled 0, ignored 0, pending 0
 [info] All tests passed.
-[success] Total time: 22 s, completed May 23, 2014 12:31:09 PM
+[success] Total time: 34 s, completed Jun 30, 2014 11:07:22 AM
 ```
 
 
