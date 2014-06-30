@@ -9,6 +9,7 @@ import com.twitter.bijection.Injection
 import com.twitter.bijection.avro.SpecificAvroCodecs
 import java.util.Properties
 import org.I0Itec.zkclient.ZkClient
+import org.apache.curator.test.InstanceSpec
 import org.scalatest._
 import scala.collection.mutable
 import scala.concurrent.duration._
@@ -21,7 +22,7 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
   private val testTopic = "testing"
   private val testTopicNumPartitions = 1
   private val testTopicReplicationFactor = 1
-  private val zookeeperPort = 2181
+  private val zookeeperPort = InstanceSpec.getRandomPort
 
   private var zookeeperEmbedded: Option[ZooKeeperEmbedded] = None
   private var zkClient: Option[ZkClient] = None
