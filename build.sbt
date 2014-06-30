@@ -25,18 +25,9 @@ resolvers ++= Seq(
 libraryDependencies ++= Seq(
   "com.twitter" %% "bijection-core" % "0.6.2",
   "com.twitter" %% "bijection-avro" % "0.6.2",
-  // Chill uses Kryo 2.21, which is not fully compatible with 2.17 (used by Storm).
-  // We must exclude the newer Kryo version, otherwise we run into the problem described at
-  // https://github.com/thinkaurelius/titan/issues/301.
-  //
-  // TODO: Once Storm 0.9.2 is released we can update our dependencies to use Chill as-is (without excludes) because
-  //       Storm then uses Kryo 2.21 (via Carbonite 1.3.3) just like Chill does.
-  "com.twitter" %% "chill" % "0.3.6"
-    exclude("com.esotericsoftware.kryo", "kryo"),
-  "com.twitter" % "chill-avro" % "0.3.6"
-    exclude("com.esotericsoftware.kryo", "kryo"),
-  "com.twitter" %% "chill-bijection" % "0.3.6"
-    exclude("com.esotericsoftware.kryo", "kryo"),
+  "com.twitter" %% "chill" % "0.3.6",
+  "com.twitter" % "chill-avro" % "0.3.6",
+  "com.twitter" %% "chill-bijection" % "0.3.6",
   // The excludes of jms, jmxtools and jmxri are required as per https://issues.apache.org/jira/browse/KAFKA-974.
   // The exclude of slf4j-simple is because it overlaps with our use of logback with slf4j facade;  without the exclude
   // we get slf4j warnings and logback's configuration is not picked up.
@@ -44,17 +35,15 @@ libraryDependencies ++= Seq(
     exclude("javax.jms", "jms")
     exclude("com.sun.jdmk", "jmxtools")
     exclude("com.sun.jmx", "jmxri")
-    exclude("org.slf4j", "slf4j-simple"),
-  "org.apache.storm" % "storm-core" % "0.9.1-incubating" % "provided"
+    exclude("org.slf4j", "slf4j-simple")
+    exclude("log4j", "log4j")
+    exclude("org.apache.zookeeper", "zookeeper"),
+  "org.apache.storm" % "storm-core" % "0.9.2-incubating" % "provided"
+    exclude("org.apache.zookeeper", "zookeeper")
     exclude("org.slf4j", "log4j-over-slf4j"),
-  // We exclude curator-framework because storm-kafka-0.8-plus recently switched from curator 1.0.1 to 1.3.3, which
-  // pulls in a newer version of ZooKeeper with which Storm 0.9.1 is not yet compatible.
-  //
-  // TODO: Remove the exclude once Storm 0.9.2 is released, because that version depends on a newer version (3.4.x) of
-  //       ZooKeeper.
-  "com.miguno" %% "storm-kafka-0.8-plus" % "0.5.0-SNAPSHOT"
-    exclude("com.netflix.curator", "curator-framework"),
-  "com.netflix.curator" % "curator-test" % "1.0.1",
+  "org.apache.storm" % "storm-kafka" % "0.9.2-incubating"
+    exclude("org.apache.zookeeper", "zookeeper"),
+  "org.apache.curator" % "curator-test" % "2.4.0",
   "com.101tec" % "zkclient" % "0.4",
   // Logback with slf4j facade
   "ch.qos.logback" % "logback-classic" % "1.1.2",

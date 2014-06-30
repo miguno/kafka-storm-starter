@@ -1,7 +1,7 @@
 package com.miguno.kafkastorm.zookeeper
 
-import com.netflix.curator.test.TestingServer
 import kafka.utils.Logging
+import org.apache.curator.test.TestingServer
 
 /**
  * Runs an in-memory, "embedded" instance of a ZooKeeper server.
