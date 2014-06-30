@@ -1,24 +1,26 @@
 package com.miguno.kafkastorm.integration
 
-import kafka.admin.AdminUtils
+import java.util.Properties
+
 import _root_.kafka.utils.{Logging, ZKStringSerializer}
 import _root_.storm.kafka.{KafkaSpout, SpoutConfig, ZkHosts}
-import backtype.storm.{Testing, ILocalCluster, Config}
 import backtype.storm.generated.StormTopology
 import backtype.storm.spout.SchemeAsMultiScheme
 import backtype.storm.testing._
 import backtype.storm.topology.TopologyBuilder
+import backtype.storm.{Config, ILocalCluster, Testing}
 import com.miguno.avro.Tweet
 import com.miguno.kafkastorm.kafka._
 import com.miguno.kafkastorm.storm.{AvroDecoderBolt, AvroKafkaSinkBolt, AvroScheme, TweetAvroKryoDecorator}
 import com.miguno.kafkastorm.zookeeper.ZooKeeperEmbedded
 import com.twitter.bijection.Injection
 import com.twitter.bijection.avro.SpecificAvroCodecs
-import java.util.Properties
+import kafka.admin.AdminUtils
 import kafka.message.MessageAndMetadata
 import org.I0Itec.zkclient.ZkClient
 import org.apache.curator.test.InstanceSpec
 import org.scalatest._
+
 import scala.collection.mutable
 import scala.concurrent.duration._
 import scala.language.reflectiveCalls
