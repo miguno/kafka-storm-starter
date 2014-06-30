@@ -573,7 +573,9 @@ own code.
 
 ### ZooKeeper throws InstanceAlreadyExistsException during tests
 
-You will see the following exception when running the integration tests, which you can safely ignore:
+_Note: We squelch this message during test runs.  See [log4j.properties](src/test/resources/log4.properties)._
+
+You may see the following exception when running the integration tests, which you can safely ignore:
 
     [2014-03-07 11:56:59,250] WARN Failed to register with JMX (org.apache.zookeeper.server.ZooKeeperServer)
     javax.management.InstanceAlreadyExistsException: org.apache.ZooKeeperService:name0=StandaloneServer_port-1
