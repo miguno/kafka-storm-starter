@@ -219,7 +219,7 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterEach w
    * being the expected output data.
    */
   private def baseIntegrationTest(zookeeper: ZooKeeperEmbedded, kafka: KafkaEmbedded, topology: StormTopology,
-    inputTopic: String, outputTopic: String) {
+                                  inputTopic: String, outputTopic: String) {
     And("some tweets")
     val f = fixture
     val tweets = f.messages
