@@ -281,10 +281,6 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterEach w
       val mkClusterParam = new MkClusterParam
       mkClusterParam.setSupervisors(2)
       val daemonConf = new Config
-      // STORM_LOCAL_MODE_ZMQ: Whether or not to use ZeroMQ for messaging in local mode. If this is set to false, then
-      // Storm will use a pure-Java messaging system. The purpose of this flag is to make it easy to run Storm in local
-      // mode by eliminating the need for native dependencies, which can be difficult to install.
-      daemonConf.put(Config.STORM_LOCAL_MODE_ZMQ, false: java.lang.Boolean)
       mkClusterParam.setDaemonConf(daemonConf)
       mkClusterParam
     }
