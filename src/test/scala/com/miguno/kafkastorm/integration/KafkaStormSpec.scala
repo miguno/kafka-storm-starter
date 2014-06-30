@@ -17,6 +17,7 @@ import com.twitter.bijection.avro.SpecificAvroCodecs
 import java.util.Properties
 import kafka.message.MessageAndMetadata
 import org.I0Itec.zkclient.ZkClient
+import org.apache.curator.test.InstanceSpec
 import org.scalatest._
 import scala.collection.mutable
 import scala.concurrent.duration._
@@ -38,7 +39,7 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterAll wi
   private val outputTopic = "testing-output"
   private val outputTopicNumPartitions = 1
   private val outputTopicReplicationFactor = 1
-  private val zookeeperPort = 2181
+  private val zookeeperPort = InstanceSpec.getRandomPort
   private var zookeeperEmbedded: Option[ZooKeeperEmbedded] = None
   private var zkClient: Option[ZkClient] = None
   private var kafkaEmbedded: Option[KafkaEmbedded] = None
