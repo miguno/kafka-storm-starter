@@ -31,7 +31,7 @@ import scala.language.reflectiveCalls
  * reasons the integration tests are not simple "given/when/then" style tests.
  */
 @DoNotDiscover
-class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterAll with GivenWhenThen with Logging {
+class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterEach with GivenWhenThen with Logging {
 
   private val inputTopic = "testing-input"
   private val inputTopicNumPartitions = 1
@@ -46,7 +46,7 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterAll wi
 
   implicit val specificAvroBinaryInjectionForTweet = SpecificAvroCodecs.toBinary[Tweet]
 
-  override def beforeAll() {
+  override def beforeEach() {
     // Start embedded ZooKeeper server
     zookeeperEmbedded = Some(new ZooKeeperEmbedded(zookeeperPort))
 
@@ -79,7 +79,7 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterAll wi
     }
   }
 
-  override def afterAll() {
+  override def afterEach() {
     for {k <- kafkaEmbedded} k.stop()
 
     for {
