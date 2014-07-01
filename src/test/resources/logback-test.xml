@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!--
+  The `PatternLayout` documentation of logback explains how you can customize the encoder patterns below.
+  See http://logback.qos.ch/manual/layouts.html#ClassicPatternLayout
+-->
+<configuration scan="true" scanPeriod="60 seconds">
+ <appender name="A1" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss} %c{1} [%p] %m%n</pattern>
+    </encoder>
+ </appender>
+
+ <appender name="ACCESS" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss} %c{1} [%p] %m%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="METRICS" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d %-8r %m%n</pattern>
+    </encoder>
+  </appender>
+
+  <!--
+    Note:  There is a known bug in Storm versions <= 0.9.1 where tweaking logback settings may trigger runtime
+    exceptions.  See https://www.mail-archive.com/user@storm.incubator.apache.org/msg01907.html
+  -->
+  <root level="ERROR">
+    <appender-ref ref="A1"/>
+  </root>
+
+  <logger name="backtype.storm.security.auth.authorizer" additivity="false">
+    <level value="ERROR" />
+    <appender-ref ref="ACCESS" />
+  </logger>
+
+  <logger name="backtype.storm.metric.LoggingMetricsConsumer" additivity="false" >
+    <level value="ERROR"/>
+    <appender-ref ref="METRICS"/>
+  </logger>
+
+</configuration>
