@@ -1,16 +1,18 @@
 package com.miguno.kafkastorm.storm
 
-import backtype.storm.{Config, LocalCluster}
+import java.util.Properties
+
 import backtype.storm.generated.KillOptions
 import backtype.storm.topology.TopologyBuilder
+import backtype.storm.{Config, LocalCluster}
 import com.miguno.kafkastorm.kafka.KafkaEmbedded
 import com.miguno.kafkastorm.zookeeper.ZooKeeperEmbedded
-import java.util.Properties
 import kafka.admin.AdminUtils
 import kafka.utils.ZKStringSerializer
 import org.I0Itec.zkclient.ZkClient
-import scala.concurrent.duration._
 import storm.kafka.{KafkaSpout, SpoutConfig, ZkHosts}
+
+import scala.concurrent.duration._
 
 /**
  * Showcases how to create a Storm topology that reads data from Kafka.  Because it's a demo this topology does not
@@ -23,7 +25,7 @@ import storm.kafka.{KafkaSpout, SpoutConfig, ZkHosts}
  * [[https://github.com/miguno/wirbelsturm Wirbelsturm]].
  */
 class KafkaStormDemo(kafkaZkConnect: String, topic: String, numTopicPartitions: Int = 1,
-  topologyName: String = "kafka-storm-starter", runtime: Duration = 1.hour) {
+                     topologyName: String = "kafka-storm-starter", runtime: Duration = 1.hour) {
 
   def runTopologyLocally() {
     val zkHosts = new ZkHosts(kafkaZkConnect)
@@ -88,7 +90,7 @@ object KafkaStormDemo {
    * read from Kafka.
    */
   private def startZooKeeperAndKafka(topic: String, numTopicPartitions: Int = 1, numTopicReplicationFactor: Int = 1,
-    zookeeperPort: Int = 2181) {
+                                     zookeeperPort: Int = 2181) {
 
     zookeeperEmbedded = Some(new ZooKeeperEmbedded(zookeeperPort))
     for {z <- zookeeperEmbedded} {

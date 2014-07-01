@@ -1,11 +1,12 @@
 package com.miguno.kafkastorm.kafka
 
-import kafka.consumer.{KafkaStream, Consumer, ConsumerConfig}
+import java.util.Properties
+import java.util.concurrent.Executors
+
+import kafka.consumer.{Consumer, ConsumerConfig, KafkaStream}
 import kafka.message.MessageAndMetadata
 import kafka.serializer.DefaultDecoder
 import kafka.utils.Logging
-import java.util.Properties
-import java.util.concurrent.Executors
 
 /**
  * Demonstrates how to implement a simple Kafka consumer application to read data from Kafka.
@@ -20,11 +21,11 @@ import java.util.concurrent.Executors
  * @param config Additional consumer configuration settings.
  */
 class KafkaConsumer(
-  val topic: String,
-  val zookeeperConnect: String,
-  val numThreads: Int,
-  config: Properties = new Properties
-  ) extends Logging {
+                     val topic: String,
+                     val zookeeperConnect: String,
+                     val numThreads: Int,
+                     config: Properties = new Properties
+                     ) extends Logging {
 
   private val effectiveConfig = {
     val c = new Properties
@@ -68,7 +69,7 @@ class KafkaConsumer(
 }
 
 class ConsumerTask[K, V, C <: ConsumerTaskContext](stream: KafkaStream[K, V], context: C,
-  f: (MessageAndMetadata[K, V], C) => Unit) extends Runnable with Logging {
+                                                   f: (MessageAndMetadata[K, V], C) => Unit) extends Runnable with Logging {
 
   override def run() {
     info(s"Consumer thread ${context.threadId} started")

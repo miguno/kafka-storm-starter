@@ -1,18 +1,19 @@
 package com.miguno.kafkastorm.storm
 
+import java.util
+
 import backtype.storm.task.TopologyContext
 import backtype.storm.topology.{BasicOutputCollector, OutputFieldsDeclarer}
-import backtype.storm.tuple.{Fields, Tuple}
+import backtype.storm.tuple.Tuple
 import com.miguno.avro.Tweet
 import com.miguno.kafkastorm.kafka.{KafkaProducerApp, KafkaProducerAppFactory}
 import com.twitter.bijection.Injection
 import com.twitter.bijection.avro.SpecificAvroCodecs
-import java.util
 import org.mockito.AdditionalMatchers
-import org.mockito.Matchers.argThat
 import org.mockito.Mockito.{when => mwhen, _}
-import org.scalatest.{FunSpec, GivenWhenThen, Matchers}
 import org.scalatest.mock.MockitoSugar
+import org.scalatest.{FunSpec, GivenWhenThen, Matchers}
+
 import scala.concurrent.duration._
 
 class AvroKafkaSinkBoltSpec extends FunSpec with Matchers with GivenWhenThen with MockitoSugar {
@@ -85,10 +86,7 @@ class AvroKafkaSinkBoltSpec extends FunSpec with Matchers with GivenWhenThen wit
       Then("it should declare zero output fields")
       val declarer = mock[OutputFieldsDeclarer]
       bolt.declareOutputFields(declarer)
-      // We use ArgumentMatcher as a workaround because Storm's Field class does not implement a proper `equals()`
-      // method, and Mockito relies on `equals()` for verification.  Because of that the following typical approach
-      // does NOT work: `verify(declarer, times(1)).declare(new Fields())`.
-      verify(declarer, times(1)).declare(argThat(FieldsEqualTo(new Fields())))
+      verifyZeroInteractions(declarer)
     }
 
   }

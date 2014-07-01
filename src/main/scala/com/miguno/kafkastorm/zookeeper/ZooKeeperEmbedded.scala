@@ -1,7 +1,7 @@
 package com.miguno.kafkastorm.zookeeper
 
-import com.netflix.curator.test.TestingServer
 import kafka.utils.Logging
+import org.apache.curator.test.TestingServer
 
 /**
  * Runs an in-memory, "embedded" instance of a ZooKeeper server.
@@ -10,7 +10,7 @@ import kafka.utils.Logging
  *
  * @param port The port (aka `clientPort`) to listen to.  Default: 2181.
  */
-class ZooKeeperEmbedded(port: Int) extends Logging {
+class ZooKeeperEmbedded(val port: Int = 2181) extends Logging {
 
   debug(s"Starting embedded ZooKeeper server on port ${port}...")
 
@@ -31,6 +31,11 @@ class ZooKeeperEmbedded(port: Int) extends Logging {
    *
    * You can use this to e.g. tell Kafka and Storm how to connect to this instance.
    */
-  val connectString = server.getConnectString
+  val connectString: String = server.getConnectString
+
+  /**
+   * The hostname of the ZooKeeper instance.  Example: `127.0.0.1`
+   */
+  val hostname: String = connectString.splitAt(connectString lastIndexOf ':')._1 // "foo:1:2:3" -> ("foo:1:2", ":3)
 
 }

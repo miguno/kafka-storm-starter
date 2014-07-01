@@ -14,3 +14,13 @@ assemblySettings
 // our Storm topology code "for real" to a distributed Storm cluster, Storm wants us to exclude the Storm dependencies
 // (jars) as they are provided [no pun intended] by the Storm cluster.
 run in Compile <<= Defaults.runTask(fullClasspath in Compile, mainClass in (Compile, run), runner in (Compile, run))
+
+mergeStrategy in assembly <<= (mergeStrategy in assembly) {
+  (old) => {
+    case s if s.endsWith(".class") => MergeStrategy.last
+    case x => old(x)
+  }
+}
+
+// Uncomment if you don't want to run all the tests before building assembly
+//test in assembly := {}

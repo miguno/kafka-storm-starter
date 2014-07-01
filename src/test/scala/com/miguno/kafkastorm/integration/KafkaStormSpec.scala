@@ -1,23 +1,26 @@
 package com.miguno.kafkastorm.integration
 
-import kafka.admin.AdminUtils
+import java.util.Properties
+
 import _root_.kafka.utils.{Logging, ZKStringSerializer}
 import _root_.storm.kafka.{KafkaSpout, SpoutConfig, ZkHosts}
-import backtype.storm.{Testing, ILocalCluster, Config}
 import backtype.storm.generated.StormTopology
 import backtype.storm.spout.SchemeAsMultiScheme
 import backtype.storm.testing._
 import backtype.storm.topology.TopologyBuilder
+import backtype.storm.{Config, ILocalCluster, Testing}
 import com.miguno.avro.Tweet
 import com.miguno.kafkastorm.kafka._
 import com.miguno.kafkastorm.storm.{AvroDecoderBolt, AvroKafkaSinkBolt, AvroScheme, TweetAvroKryoDecorator}
 import com.miguno.kafkastorm.zookeeper.ZooKeeperEmbedded
 import com.twitter.bijection.Injection
 import com.twitter.bijection.avro.SpecificAvroCodecs
-import java.util.Properties
+import kafka.admin.AdminUtils
 import kafka.message.MessageAndMetadata
 import org.I0Itec.zkclient.ZkClient
+import org.apache.curator.test.InstanceSpec
 import org.scalatest._
+
 import scala.collection.mutable
 import scala.concurrent.duration._
 import scala.language.reflectiveCalls
@@ -30,7 +33,9 @@ import scala.language.reflectiveCalls
  * reasons the integration tests are not simple "given/when/then" style tests.
  */
 @DoNotDiscover
-class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterAll with GivenWhenThen with Logging {
+class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterEach with GivenWhenThen with Logging {
+
+  implicit val specificAvroBinaryInjectionForTweet = SpecificAvroCodecs.toBinary[Tweet]
 
   private val inputTopic = "testing-input"
   private val inputTopicNumPartitions = 1
@@ -38,14 +43,12 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterAll wi
   private val outputTopic = "testing-output"
   private val outputTopicNumPartitions = 1
   private val outputTopicReplicationFactor = 1
-  private val zookeeperPort = 2181
+  private val zookeeperPort = InstanceSpec.getRandomPort
   private var zookeeperEmbedded: Option[ZooKeeperEmbedded] = None
   private var zkClient: Option[ZkClient] = None
   private var kafkaEmbedded: Option[KafkaEmbedded] = None
 
-  implicit val specificAvroBinaryInjectionForTweet = SpecificAvroCodecs.toBinary[Tweet]
-
-  override def beforeAll() {
+  override def beforeEach() {
     // Start embedded ZooKeeper server
     zookeeperEmbedded = Some(new ZooKeeperEmbedded(zookeeperPort))
 
@@ -54,9 +57,7 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterAll wi
       val brokerConfig = new Properties
       brokerConfig.put("zookeeper.connect", z.connectString)
       kafkaEmbedded = Some(new KafkaEmbedded(brokerConfig))
-      for {k <- kafkaEmbedded} {
-        k.start()
-      }
+      for {k <- kafkaEmbedded} k.start()
 
       // Create test topics
       val sessionTimeout = 30.seconds
@@ -78,7 +79,7 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterAll wi
     }
   }
 
-  override def afterAll() {
+  override def afterEach() {
     for {k <- kafkaEmbedded} k.stop()
 
     for {
@@ -218,7 +219,7 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterAll wi
    * being the expected output data.
    */
   private def baseIntegrationTest(zookeeper: ZooKeeperEmbedded, kafka: KafkaEmbedded, topology: StormTopology,
-    inputTopic: String, outputTopic: String) {
+                                  inputTopic: String, outputTopic: String) {
     And("some tweets")
     val f = fixture
     val tweets = f.messages
@@ -233,7 +234,7 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterAll wi
     }
     val producerApp = new KafkaProducerApp(inputTopic, kafka.brokerList, kafkaSyncProducerConfig)
 
-    And(s"a single-threaded Kafka consumer app that reads from topic $outputTopic")
+    And(s"a single-threaded Kafka consumer app that reads from topic $outputTopic and Avro-decodes the incoming data")
     // We start the Kafka consumer group, which (in our case) must be running before the first messages are being sent
     // to the output Kafka topic.  The Storm topology will write its output to this topic.  We use the Kafka consumer
     // group to learn which data was created by Storm, and compare this actual output data to the expected data (which
@@ -256,6 +257,7 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterAll wi
         }
       })
     val waitForConsumerStartup = 300.millis
+    debug(s"Waiting $waitForConsumerStartup for the Kafka consumer to start up")
     Thread.sleep(waitForConsumerStartup.toMillis)
 
     And("a Storm topology configuration that registers an Avro Kryo decorator for Tweet")
@@ -279,23 +281,31 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterAll wi
     val stormTestClusterParameters = {
       val mkClusterParam = new MkClusterParam
       mkClusterParam.setSupervisors(2)
-      val daemonConf = new Config
-      // STORM_LOCAL_MODE_ZMQ: Whether or not to use ZeroMQ for messaging in local mode. If this is set to false, then
-      // Storm will use a pure-Java messaging system. The purpose of this flag is to make it easy to run Storm in local
-      // mode by eliminating the need for native dependencies, which can be difficult to install.
-      daemonConf.put(Config.STORM_LOCAL_MODE_ZMQ, false: java.lang.Boolean)
-      mkClusterParam.setDaemonConf(daemonConf)
+      val stormClusterConfig = new Config
+
+      // Example (requires Storm 0.9.3+ with STORM-213):
+      // Storm shall use our existing in-memory ZK instance instead of starting its own, which it does by default as
+      // part of its Testing API workflow (which relies on LocalCluster).  Using the same ZK instance for Kafka and
+      // Storm is a setup often used in production, hence we can use this example to test such setups.  Also, the shared
+      // ZK setup means our tests run slightly faster.
+      //
+      //import scala.collection.JavaConverters._
+      //stormClusterConfig.put(Config.STORM_ZOOKEEPER_SERVERS, List(zookeeper.hostname).asJava)
+      //stormClusterConfig.put(Config.STORM_ZOOKEEPER_PORT, zookeeper.port: Integer)
+
+      debug(s"Storm cluster configuration: $stormClusterConfig")
+      mkClusterParam.setDaemonConf(stormClusterConfig)
       mkClusterParam
     }
     Testing.withLocalCluster(stormTestClusterParameters, new TestJob() {
       override def run(stormCluster: ILocalCluster) {
         val topologyName = "storm-kafka-integration-test"
         stormCluster.submitTopology(topologyName, topologyConfig, topology)
-        val waitForTopologyStartupMs = 3.seconds.toMillis
-        Thread.sleep(waitForTopologyStartupMs)
+        val waitForTopologyStartup = 3.seconds
+        debug(s"Waiting $waitForTopologyStartup for Storm topology to start up")
+        Thread.sleep(waitForTopologyStartup.toMillis)
 
-        And("I use the Kafka producer app to Avro-encode the tweets and sent them to Kafka")
-        // Send the test input data to Kafka.
+        And("I Avro-encode the tweets and use the Kafka producer app to sent them to Kafka")
         tweets foreach {
           case tweet =>
             val bytes = Injection[Tweet, Array[Byte]](tweet)
@@ -303,16 +313,21 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterAll wi
             producerApp.send(bytes)
         }
 
-        val waitForStormToReadFromKafka = 1.seconds
+        val waitForStormToReadFromKafka = 1.second
+        debug(s"Waiting $waitForStormToReadFromKafka for Storm to read from Kafka")
         Thread.sleep(waitForStormToReadFromKafka.toMillis)
       }
     })
 
-    Then("the Kafka consumer app should receive the decoded, original tweets from the Storm topology")
+    Then("the Kafka consumer app should receive the original tweets from the Storm topology")
     val waitForConsumerToReadStormOutput = 300.millis
+    debug(s"Waiting $waitForConsumerToReadStormOutput for Kafka consumer to read Storm output from Kafka")
     Thread.sleep(waitForConsumerToReadStormOutput.toMillis)
-    consumer.shutdown()
     actualTweets.toSeq should be(tweets.toSeq)
+
+    // Cleanup
+    consumer.shutdown()
+    producerApp.shutdown()
   }
 
 }

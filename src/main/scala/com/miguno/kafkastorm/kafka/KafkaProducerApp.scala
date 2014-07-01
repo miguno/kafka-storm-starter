@@ -1,7 +1,8 @@
 package com.miguno.kafkastorm.kafka
 
-import kafka.producer.{KeyedMessage, ProducerConfig, Producer}
 import java.util.Properties
+
+import kafka.producer.{KeyedMessage, Producer, ProducerConfig}
 
 /**
  * Demonstrates how to implement a simple Kafka producer application to send data to Kafka.
@@ -14,10 +15,10 @@ import java.util.Properties
  * @param producerConfig Additional producer configuration settings.
  */
 case class KafkaProducerApp(
-  val topic: String,
-  val brokerList: String,
-  producerConfig: Properties = new Properties
-  ) {
+                             val topic: String,
+                             val brokerList: String,
+                             producerConfig: Properties = new Properties
+                             ) {
 
   private val producer = {
     val effectiveConfig = {
@@ -43,6 +44,8 @@ case class KafkaProducerApp(
   def send(key: Array[Byte], value: Array[Byte]): Unit = producer.send(toMessage(Some(key), value))
 
   def send(value: Array[Byte]): Unit = producer.send(toMessage(None, value))
+
+  def shutdown(): Unit = producer.close()
 
 }
 
