@@ -253,6 +253,9 @@ This project follows the [git-flow](https://github.com/nvie/gitflow) approach.  
 * The branch `develop` is used for integration of the "next release".
 * The branch `master` is used for bringing forth production releases.
 
+Follow the [git-flow installation instructions](https://github.com/nvie/gitflow/wiki/Installation) for your
+development machine.
+
 See [git-flow](https://github.com/nvie/gitflow) and the introduction article
 [Why aren't you using git-flow?](http://jeffkreeftmeijer.com/2010/why-arent-you-using-git-flow/) for details.
 
