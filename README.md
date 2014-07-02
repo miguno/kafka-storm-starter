@@ -413,6 +413,9 @@ To create a fat jar, which includes any dependencies of kafka-storm-starter:
 
     >>> Generates `target/scala-2.10/kafka-storm-starter-assembly-0.2.0-SNAPSHOT.jar`
 
+_Note: By default, `assembly` by itself will NOT run any tests.  If you want to run tests before assembly, chain sbt_
+_commands in sequence, e.g. `./sbt test assembly`.  See [assembly.sbt](assembly.sbt)` for details why we do this._
+
 To create a scaladoc/javadoc jar:
 
     $ ./sbt packageDoc
