@@ -60,8 +60,8 @@ libraryDependencies ++= Seq(
 // merely as a test dependency), which we need for TypeTag usage.
 libraryDependencies <+= (scalaVersion)("org.scala-lang" % "scala-reflect" % _)
 
-// Enable forking (see sbt docs) because our tests use many threads.
-fork in test := true
+// Enable forking (see sbt docs) because our full build (including tests) uses many threads.
+fork := true
 
 javacOptions in Compile ++= Seq(
   "-source", "1.6",
