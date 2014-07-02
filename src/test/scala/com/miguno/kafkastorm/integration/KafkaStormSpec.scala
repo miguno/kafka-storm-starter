@@ -44,6 +44,8 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterEach w
   private val outputTopicNumPartitions = 1
   private val outputTopicReplicationFactor = 1
   private val zookeeperPort = InstanceSpec.getRandomPort
+  private val kafkaPort = InstanceSpec.getRandomPort
+
   private var zookeeperEmbedded: Option[ZooKeeperEmbedded] = None
   private var zkClient: Option[ZkClient] = None
   private var kafkaEmbedded: Option[KafkaEmbedded] = None
@@ -56,6 +58,7 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterEach w
       // Start embedded Kafka broker
       val brokerConfig = new Properties
       brokerConfig.put("zookeeper.connect", z.connectString)
+      brokerConfig.put("port", kafkaPort.toString)
       kafkaEmbedded = Some(new KafkaEmbedded(brokerConfig))
       for {k <- kafkaEmbedded} k.start()
 

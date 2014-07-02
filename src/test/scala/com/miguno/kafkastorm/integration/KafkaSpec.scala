@@ -27,6 +27,7 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
   private val testTopicNumPartitions = 1
   private val testTopicReplicationFactor = 1
   private val zookeeperPort = InstanceSpec.getRandomPort
+  private val kafkaPort = InstanceSpec.getRandomPort
 
   private var zookeeperEmbedded: Option[ZooKeeperEmbedded] = None
   private var zkClient: Option[ZkClient] = None
@@ -40,10 +41,9 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
       // Start embedded Kafka broker
       val brokerConfig = new Properties
       brokerConfig.put("zookeeper.connect", z.connectString)
+      brokerConfig.put("port", kafkaPort.toString)
       kafkaEmbedded = Some(new KafkaEmbedded(brokerConfig))
-      for {k <- kafkaEmbedded} {
-        k.start()
-      }
+      for {k <- kafkaEmbedded} k.start()
 
       // Create test topic
       val sessionTimeout = 30.seconds
