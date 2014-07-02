@@ -60,13 +60,13 @@ class AvroDecoderBolt[T <: SpecificRecordBase : Manifest](
   override def execute(tuple: Tuple, collector: BasicOutputCollector) {
     val readTry = Try(tuple.getBinaryByField(inputField))
     readTry match {
-      case Success(bytes) if bytes != null => decodeAndSinkToKafka(bytes, collector)
+      case Success(bytes) if bytes != null => decodeAndEmit(bytes, collector)
       case Success(_) => log.error("Reading from input tuple returned null")
       case Failure(e) => log.error("Could not read from input tuple: " + Throwables.getStackTraceAsString(e))
     }
   }
 
-  private def decodeAndSinkToKafka(bytes: Array[Byte], collector: BasicOutputCollector) {
+  private def decodeAndEmit(bytes: Array[Byte], collector: BasicOutputCollector) {
     require(bytes != null, "bytes must not be null")
     val decodeTry = Injection.invert[T, Array[Byte]](bytes)
     decodeTry match {
