@@ -63,6 +63,14 @@ libraryDependencies <+= (scalaVersion)("org.scala-lang" % "scala-reflect" % _)
 // Enable forking (see sbt docs) because our full build (including tests) uses many threads.
 fork := true
 
+// The following options are passed to forked JVMs.
+//
+// Note: If you need to pass options to the JVM used by sbt (i.e. the "parent" JVM), then you should modify `.sbtopts`.
+javaOptions ++= Seq(
+  "-Xmx512m",
+  "-Djava.awt.headless=true",
+  "-Djava.net.preferIPv4Stack=true")
+
 javacOptions in Compile ++= Seq(
   "-source", "1.6",
   "-target", "1.6",
