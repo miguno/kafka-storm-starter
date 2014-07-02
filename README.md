@@ -264,68 +264,45 @@ See [git-flow](https://github.com/nvie/gitflow) and the introduction article
 
 ## Build requirements
 
-* [Scala](http://www.scala-lang.org/) 2.10.4
-* [sbt](http://www.scala-sbt.org/) 0.13.2
+Your development machine requires:
+
 * Oracle Java JDK 6 (version 6 is still recommended for use with Kafka and Storm)
     * The code _in this project_ works with Java 7, too.  However, some dependencies we use are not published for Java 7
       yet.
 
-
-### Install on Mac OS X
-
-_The instructions below assume you have [Homebrew](http://brew.sh/) installed on your Mac._
-
-First, install Oracle Java JDK 6 for Mac:
-
-* [Java 6 for Mac OS X](http://support.apple.com/kb/dl1572) aka
-  "Java for OS X 2014-001".  This will give you Java 1.6.0_65.
-
-Then, install Scala and sbt:
-
-    $ brew update
-    $ brew install scala210 sbt
+This project also needs [Scala](http://www.scala-lang.org/) 2.10.4 and [sbt](http://www.scala-sbt.org/) 0.13.2, but
+these will be automatically downloaded and made available (locally/sandboxed) to the project as part of the build setup.
 
 
-### Install on RHEL/CentOS 6
+### Install Oracle JDK 6 (Mac OS X)
 
-First, install Oracle Java JDK 6:
-
-* Follow [these instructions](http://www.if-not-true-then-false.com/2010/install-sun-oracle-java-jdk-jre-6-on-fedora-centos-red-hat-rhel/)
-  (untested!).
-    * Note: As a RHEL 6 user you may have access to a ready-to-use RPM package of Oracle JDK 6 in your existing yum
-      repositories as part of the RedHat Network (RHN).  If so, you do not need to follow the instructions in the link
-      above.  Instead, you only need to run e.g. `sudo yum install java-1.6.0-sun-devel`
-      ([details](https://access.redhat.com/site/documentation/en-US/JBoss_Enterprise_Application_Platform/5/html/Installation_Guide/appe-install_jdk.html)).
-
-Then, install Scala and sbt:
-
-    $ sudo yum install http://www.scala-lang.org/files/archive/scala-2.10.4.rpm
-    $ sudo yum install http://dl.bintray.com/sbt/rpm/sbt-0.13.2.rpm
+Download and install [Java 6 for Mac OS X](http://support.apple.com/kb/dl1572) aka "Java for OS X 2014-001".  This will
+give you Java 1.6.0_65.
 
 
-See [Download Scala 2.10.4](http://www.scala-lang.org/download/2.10.4.html) and
-[Installing sbt](http://www.scala-sbt.org/release/docs/Getting-Started/Setup.html) for details.
+### Install Oracle JDK 6 (RHEL/CentOS 6)
+
+Follow the installations instructions for
+[Oracle JDK 6 on RHEL/CentOS 6](http://www.if-not-true-then-false.com/2010/install-sun-oracle-java-jdk-jre-6-on-fedora-centos-red-hat-rhel/)
+(untested!).
+
+Note: As a RHEL 6 user you may have access to a ready-to-use RPM package of Oracle JDK 6 in your existing yum
+repositories as part of the RedHat Network (RHN).  If so, you do not need to follow the instructions in the link above.
+Instead, you only need to run e.g. `sudo yum install java-1.6.0-sun-devel`
+([details](https://access.redhat.com/site/documentation/en-US/JBoss_Enterprise_Application_Platform/5/html/Installation_Guide/appe-install_jdk.html)).
 
 
-### Install on Ubuntu/Debian
+### Install Oracle JDK 6 (Ubuntu/Debian)
 
-First, install Oracle JDK 6:
+Follow the installation instructions for
+[Oracle JDK 6 on Ubuntu/Debian](http://linuxg.net/how-to-install-oracle-java-jdk-678-on-ubuntu-13-04-12-10-12-04/)
+(untested!).
 
-* Follow [these instructions](http://linuxg.net/how-to-install-oracle-java-jdk-678-on-ubuntu-13-04-12-10-12-04/)
-  (untested!).  Note that by following these instructions you will install Oracle JDK/JRE from a third-party PPA package
-  repository (`ppa:webupd8team/java`, managed by [webupd8](http://www.webupd8.org/)).  Unfortunately Oracle does not
-  provide official apt repositories for Ubuntu, and the Ubuntu team was required to remove "their" Oracle JDK/JRE
-  packages from the Ubuntu repositories because of licensing issues with Oracle.
+Note: By following these instructions you will install Oracle JDK/JRE from a third-party PPA package repository
+(`ppa:webupd8team/java`, managed by [webupd8](http://www.webupd8.org/)).  Unfortunately Oracle does not provide official
+apt repositories for Ubuntu, and the Ubuntu team was required to remove "their" Oracle JDK/JRE packages from the Ubuntu
+repositories because of licensing issues with Oracle.
 
-Then, install Scala and sbt:
-
-    $ wget http://www.scala-lang.org/files/archive/scala-2.10.4.deb
-    $ sudo dpkg -i scala-2.10.4.deb
-    $ wget http://dl.bintray.com/sbt/debian/sbt-0.13.2.deb
-    $ sudo dpkg -i http://dl.bintray.com/sbt/debian/sbt-0.13.2.deb
-
-See [Download Scala 2.10.4](http://www.scala-lang.org/download/2.10.4.html) and
-[Installing sbt](http://www.scala-sbt.org/release/docs/Getting-Started/Setup.html) for details.
 
 
 <a name="Building-the-code"></a>
