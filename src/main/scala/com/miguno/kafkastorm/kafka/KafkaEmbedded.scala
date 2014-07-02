@@ -22,7 +22,7 @@ class KafkaEmbedded(config: Properties = new Properties) extends Logging {
   private val defaultZkConnect = "127.0.0.1:2181"
   private val logDir = {
     val random = (new scala.util.Random).nextInt
-    val path = Seq(System.getProperty("java.io.tmpdir"), "kafka-test", "logs-", random).mkString(File.separator)
+    val path = Seq(System.getProperty("java.io.tmpdir"), "kafka-test", "logs-" + random).mkString(File.separator)
     new File(path)
   }
 
