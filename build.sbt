@@ -25,9 +25,9 @@ resolvers ++= Seq(
 libraryDependencies ++= Seq(
   "com.twitter" %% "bijection-core" % "0.6.2",
   "com.twitter" %% "bijection-avro" % "0.6.2",
-  "com.twitter" %% "chill" % "0.3.6",
-  "com.twitter" % "chill-avro" % "0.3.6",
-  "com.twitter" %% "chill-bijection" % "0.3.6",
+  "com.twitter" %% "chill" % "0.4.0",
+  "com.twitter" % "chill-avro" % "0.4.0",
+  "com.twitter" %% "chill-bijection" % "0.4.0",
   // The excludes of jms, jmxtools and jmxri are required as per https://issues.apache.org/jira/browse/KAFKA-974.
   // The exclude of slf4j-simple is because it overlaps with our use of logback with slf4j facade;  without the exclude
   // we get slf4j warnings and logback's configuration is not picked up.
