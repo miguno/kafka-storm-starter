@@ -37,9 +37,7 @@ import scala.util.{Failure, Success, Try}
  * @tparam T The type of the Avro record (e.g. a `Tweet`) based on the underlying Avro schema being used.  Must be
  *           a subclass of Avro's `SpecificRecordBase`.
  */
-class AvroDecoderBolt[T <: SpecificRecordBase : Manifest](
-                                                           inputField: String = "bytes",
-                                                           outputField: String = "pojo")
+class AvroDecoderBolt[T <: SpecificRecordBase : Manifest](inputField: String = "bytes", outputField: String = "pojo")
   extends BaseBasicBolt {
 
   // Note: Ideally we would like to use TypeTag's instead of Manifest's here.  Doing so would only require replacing
