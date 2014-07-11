@@ -38,7 +38,6 @@ class AvroSchemeSpec extends FunSpec with Matchers with GivenWhenThen {
 
       Then("there should only be a single field")
       outputFields.size() should be(1)
-
       And("this field should be named 'pojo'")
       outputFields.contains("pojo") should be(true)
     }
@@ -48,17 +47,17 @@ class AvroSchemeSpec extends FunSpec with Matchers with GivenWhenThen {
       Given("a scheme for type Tweet ")
       val scheme = new AvroScheme[Tweet]
       And("some binary-encoded Tweet records")
-      val f = fixture
-      val encodedTweets = f.messages.map(Injection[Tweet, Array[Byte]])
+      val tweets = fixture.messages
+      val encodedTweets = tweets.map(Injection[Tweet, Array[Byte]])
 
-      When("I deserialize the records into pojos")
+      When("I deserialize the binary records into pojos")
       val actualTweets = for {
         l <- encodedTweets.map(scheme.deserialize)
         tweet <- l.asScala
       } yield tweet
 
       Then("the pojos should be equal to the original pojos")
-      actualTweets should be(f.messages)
+      actualTweets should be(tweets)
     }
 
     it("should throw a runtime exception when serialization fails") {
