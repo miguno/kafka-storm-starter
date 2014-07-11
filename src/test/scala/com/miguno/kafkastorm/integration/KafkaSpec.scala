@@ -116,7 +116,7 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
           (m: MessageAndMetadata[Array[Byte], Array[Byte]], c: ConsumerTaskContext) => {
             val tweet = Injection.invert[Tweet, Array[Byte]](m.message)
             for {t <- tweet} {
-              info(s"Consumer thread ${c.threadId}: received Tweet ${t} from partition ${m.partition} of topic ${m.topic} (offset: ${m.offset})")
+              info(s"Consumer thread ${c.threadId}: received Tweet $t from partition ${m.partition} of topic ${m.topic} (offset: ${m.offset})")
               actualTweets += t
             }
           })
@@ -137,11 +137,10 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
           new KafkaProducerApp(testTopic, k.brokerList, config)
         }
         tweets foreach {
-          case tweet => {
+          case tweet =>
             val bytes = Injection[Tweet, Array[Byte]](tweet)
             info(s"Synchronously sending Tweet $tweet to topic ${producerApp.topic}")
             producerApp.send(bytes)
-          }
         }
 
         Then("the consumer app should receive the tweets")
@@ -185,7 +184,7 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
           (m: MessageAndMetadata[Array[Byte], Array[Byte]], c: ConsumerTaskContext) => {
             val tweet = Injection.invert[Tweet, Array[Byte]](m.message)
             for {t <- tweet} {
-              info(s"Consumer thread ${c.threadId}: received Tweet ${t} from partition ${m.partition} of topic ${m.topic} (offset: ${m.offset})")
+              info(s"Consumer thread ${c.threadId}: received Tweet $t from partition ${m.partition} of topic ${m.topic} (offset: ${m.offset})")
               actualTweets += t
             }
           })
@@ -209,11 +208,10 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
           new KafkaProducerApp(testTopic, k.brokerList, config)
         }
         tweets foreach {
-          case tweet => {
+          case tweet =>
             val bytes = Injection[Tweet, Array[Byte]](tweet)
             info(s"Asynchronously sending Tweet $tweet to topic ${producerApp.topic}")
             producerApp.send(bytes)
-          }
         }
 
         Then("the consumer app should receive the tweets")
