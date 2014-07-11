@@ -102,13 +102,15 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
         val tweets = f.messages
         And("a single-threaded Kafka consumer group")
         // The Kafka consumer group must be running before the first messages are being sent to the topic.
-        val numConsumerThreads = 1
-        val consumerConfig = {
-          val c = new Properties
-          c.put("group.id", "test-consumer")
-          c
+        val consumer = {
+          val numConsumerThreads = 1
+          val config = {
+            val c = new Properties
+            c.put("group.id", "test-consumer")
+            c
+          }
+          new KafkaConsumer(testTopic, z.connectString, numConsumerThreads, config)
         }
-        val consumer = new KafkaConsumer(testTopic, z.connectString, numConsumerThreads, consumerConfig)
         val actualTweets = new mutable.SynchronizedQueue[Tweet]
         consumer.startConsumers(
           (m: MessageAndMetadata[Array[Byte], Array[Byte]], c: ConsumerTaskContext) => {
@@ -124,14 +126,16 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
         debug("Finished waiting for Kafka consumer threads to launch")
 
         When("I start a synchronous Kafka producer that sends the tweets in Avro binary format")
-        val syncProducerConfig = {
-          val c = new Properties
-          c.put("producer.type", "sync")
-          c.put("client.id", "test-sync-producer")
-          c.put("request.required.acks", "1")
-          c
+        val producerApp = {
+          val config = {
+            val c = new Properties
+            c.put("producer.type", "sync")
+            c.put("client.id", "test-sync-producer")
+            c.put("request.required.acks", "1")
+            c
+          }
+          new KafkaProducerApp(testTopic, k.brokerList, config)
         }
-        val producerApp = new KafkaProducerApp(testTopic, k.brokerList, syncProducerConfig)
         tweets foreach {
           case tweet => {
             val bytes = Injection[Tweet, Array[Byte]](tweet)
@@ -167,13 +171,15 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
         val tweets = f.messages
         And("a single-threaded Kafka consumer group")
         // The Kafka consumer group must be running before the first messages are being sent to the topic.
-        val numConsumerThreads = 1
-        val consumerConfig = {
-          val c = new Properties
-          c.put("group.id", "test-consumer")
-          c
+        val consumer = {
+          val numConsumerThreads = 1
+          val config = {
+            val c = new Properties
+            c.put("group.id", "test-consumer")
+            c
+          }
+          new KafkaConsumer(testTopic, z.connectString, numConsumerThreads, config)
         }
-        val consumer = new KafkaConsumer(testTopic, z.connectString, numConsumerThreads, consumerConfig)
         val actualTweets = new mutable.SynchronizedQueue[Tweet]
         consumer.startConsumers(
           (m: MessageAndMetadata[Array[Byte], Array[Byte]], c: ConsumerTaskContext) => {
@@ -189,17 +195,19 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
         debug("Finished waiting for Kafka consumer threads to launch")
 
         When("I start an asynchronous Kafka producer that sends the tweets in Avro binary format")
-        val syncProducerConfig = {
-          val c = new Properties
-          c.put("producer.type", "async")
-          c.put("client.id", "test-sync-producer")
-          c.put("request.required.acks", "1")
-          // We must set `batch.num.messages` and/or `queue.buffering.max.ms` so that the async producer will actually
-          // send our (typically few) test messages before the unit test finishes.
-          c.put("batch.num.messages", tweets.size.toString)
-          c
+        val producerApp = {
+          val config = {
+            val c = new Properties
+            c.put("producer.type", "async")
+            c.put("client.id", "test-sync-producer")
+            c.put("request.required.acks", "1")
+            // We must set `batch.num.messages` and/or `queue.buffering.max.ms` so that the async producer will actually
+            // send our (typically few) test messages before the unit test finishes.
+            c.put("batch.num.messages", tweets.size.toString)
+            c
+          }
+          new KafkaProducerApp(testTopic, k.brokerList, config)
         }
-        val producerApp = new KafkaProducerApp(testTopic, k.brokerList, syncProducerConfig)
         tweets foreach {
           case tweet => {
             val bytes = Injection[Tweet, Array[Byte]](tweet)
