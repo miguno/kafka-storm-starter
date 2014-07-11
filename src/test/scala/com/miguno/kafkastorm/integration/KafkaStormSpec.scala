@@ -248,7 +248,7 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterEach w
       c.put("group.id", "kafka-storm-test-consumer")
       c
     }
-    val consumer = new KafkaConsumer(outputTopic, zookeeper.connectString, numConsumerThreads, kafkaConsumerConfig)
+    val consumer = new KafkaConsumerApp(outputTopic, zookeeper.connectString, numConsumerThreads, kafkaConsumerConfig)
     val actualTweets = new mutable.SynchronizedQueue[Tweet]
     consumer.startConsumers(
       (m: MessageAndMetadata[Array[Byte], Array[Byte]], c: ConsumerTaskContext) => {

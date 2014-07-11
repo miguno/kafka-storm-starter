@@ -5,7 +5,7 @@ import java.util.Properties
 import _root_.kafka.message.MessageAndMetadata
 import _root_.kafka.utils.{Logging, ZKStringSerializer}
 import com.miguno.avro.Tweet
-import com.miguno.kafkastorm.kafka.{ConsumerTaskContext, KafkaConsumer, KafkaEmbedded, KafkaProducerApp}
+import com.miguno.kafkastorm.kafka.{ConsumerTaskContext, KafkaConsumerApp, KafkaEmbedded, KafkaProducerApp}
 import com.miguno.kafkastorm.zookeeper.ZooKeeperEmbedded
 import com.twitter.bijection.Injection
 import com.twitter.bijection.avro.SpecificAvroCodecs
@@ -109,7 +109,7 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
             c.put("group.id", "test-consumer")
             c
           }
-          new KafkaConsumer(testTopic, z.connectString, numConsumerThreads, config)
+          new KafkaConsumerApp(testTopic, z.connectString, numConsumerThreads, config)
         }
         val actualTweets = new mutable.SynchronizedQueue[Tweet]
         consumer.startConsumers(
@@ -177,7 +177,7 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
             c.put("group.id", "test-consumer")
             c
           }
-          new KafkaConsumer(testTopic, z.connectString, numConsumerThreads, config)
+          new KafkaConsumerApp(testTopic, z.connectString, numConsumerThreads, config)
         }
         val actualTweets = new mutable.SynchronizedQueue[Tweet]
         consumer.startConsumers(

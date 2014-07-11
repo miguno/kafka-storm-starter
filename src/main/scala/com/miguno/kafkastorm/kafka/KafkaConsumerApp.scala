@@ -20,7 +20,7 @@ import kafka.utils.Logging
  * @param numThreads The number of threads used by the consumer application to read from Kafka.
  * @param config Additional consumer configuration settings.
  */
-class KafkaConsumer(
+class KafkaConsumerApp(
                      val topic: String,
                      val zookeeperConnect: String,
                      val numThreads: Int,
