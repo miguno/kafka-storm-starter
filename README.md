@@ -266,9 +266,7 @@ See [git-flow](https://github.com/nvie/gitflow) and the introduction article
 
 Your development machine requires:
 
-* Oracle Java JDK 6 (version 6 is still recommended for use with Kafka and Storm)
-    * The code _in this project_ works with Java 7, too.  However, some dependencies we use are not published for Java 7
-      yet.
+* Oracle Java JDK 6 (version 6 is still recommended for use with Kafka and Storm).  The code works with Java 7, too.
 
 This project also needs [Scala](http://www.scala-lang.org/) 2.10.4 and [sbt](http://www.scala-sbt.org/) 0.13.2, but
 these will be automatically downloaded and made available (locally/sandboxed) to the project as part of the build setup.
