@@ -178,7 +178,7 @@ What features do we showcase in kafka-storm-starter?  Note that we focus on show
       A simple Kafka producer app for writing Avro-encoded data into Kafka.
       [KafkaSpec](src/test/scala/com/miguno/kafkastorm/integration/KafkaSpec.scala) puts this producer to use and shows
       how to use Twitter Bijection to Avro-encode the messages being sent to Kafka.
-    * [KafkaConsumer](src/main/scala/com/miguno/kafkastorm/kafka/KafkaConsumer.scala):
+    * [KafkaConsumerApp](src/main/scala/com/miguno/kafkastorm/kafka/KafkaConsumerApp.scala):
       A simple Kafka consumer app for reading Avro-encoded data from Kafka.
       [KafkaSpec](src/test/scala/com/miguno/kafkastorm/integration/KafkaSpec.scala) puts this consumer to use and shows
       how to use Twitter Bijection to Avro-decode the messages being read from Kafka.
