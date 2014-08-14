@@ -60,7 +60,7 @@ class AvroKafkaSinkBolt[T <: SpecificRecordBase : Manifest](
   override def execute(tuple: Tuple, collector: BasicOutputCollector) {
     tuple.getValueByField(inputField) match {
       case pojo: T =>
-        val bytes = Injection[T, Array[Byte]](pojo)
+        val bytes = Injection(pojo)
         log.debug("Encoded pojo " + pojo + " to Avro binary format")
         producer.send(bytes)
       case _ => log.error("Could not decode binary data")

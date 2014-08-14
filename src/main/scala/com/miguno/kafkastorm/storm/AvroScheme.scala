@@ -46,7 +46,7 @@ class AvroScheme[T <: SpecificRecordBase : Manifest] extends Scheme {
   @transient lazy implicit private val specificAvroBinaryInjection = SpecificAvroCodecs.toBinary[T]
 
   override def deserialize(bytes: Array[Byte]): java.util.List[AnyRef] = {
-    val result = Injection.invert[T, Array[Byte]](bytes)
+    val result = Injection.invert(bytes)
     result match {
       case Success(pojo) => new Values(pojo)
       case Failure(e) => throw new RuntimeException("Could not decode input bytes")

@@ -19,7 +19,7 @@ class AvroDecoderBoltSpec extends FunSpec with Matchers with GivenWhenThen with 
   private type AnyAvroSpecificRecordBase = Tweet
 
   private val AnyTweet = new Tweet("ANY_USER_1", "ANY_TEXT_1", 1234.seconds.toSeconds)
-  private val AnyTweetInAvroBytes = Injection[Tweet, Array[Byte]](AnyTweet)
+  private val AnyTweetInAvroBytes = Injection(AnyTweet)
 
   describe("An AvroDecoderBolt") {
 

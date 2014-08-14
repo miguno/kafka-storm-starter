@@ -48,7 +48,7 @@ class AvroSchemeSpec extends FunSpec with Matchers with GivenWhenThen {
       val scheme = new AvroScheme[Tweet]
       And("some binary-encoded Tweet records")
       val tweets = fixture.messages
-      val encodedTweets = tweets.map(Injection[Tweet, Array[Byte]])
+      val encodedTweets = tweets.map(Injection(_))
 
       When("I deserialize the binary records into pojos")
       val actualTweets = for {

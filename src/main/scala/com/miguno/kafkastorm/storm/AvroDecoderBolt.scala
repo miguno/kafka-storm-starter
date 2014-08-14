@@ -66,7 +66,7 @@ class AvroDecoderBolt[T <: SpecificRecordBase : Manifest](inputField: String = "
 
   private def decodeAndEmit(bytes: Array[Byte], collector: BasicOutputCollector) {
     require(bytes != null, "bytes must not be null")
-    val decodeTry = Injection.invert[T, Array[Byte]](bytes)
+    val decodeTry = Injection.invert(bytes)
     decodeTry match {
       case Success(pojo) =>
         log.debug("Binary data decoded into pojo: " + pojo)

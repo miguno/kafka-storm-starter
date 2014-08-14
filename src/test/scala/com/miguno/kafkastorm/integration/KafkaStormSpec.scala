@@ -252,7 +252,7 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterEach w
     val actualTweets = new mutable.SynchronizedQueue[Tweet]
     consumer.startConsumers(
       (m: MessageAndMetadata[Array[Byte], Array[Byte]], c: ConsumerTaskContext) => {
-        val tweet = Injection.invert[Tweet, Array[Byte]](m.message())
+        val tweet = Injection.invert(m.message())
         for {t <- tweet} {
           info(s"Consumer thread ${c.threadId}: received Tweet $t from partition ${m.partition} of topic ${m.topic} " +
             s"(offset: ${m.offset})")
@@ -311,7 +311,7 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterEach w
         And("I Avro-encode the tweets and use the Kafka producer app to sent them to Kafka")
         tweets foreach {
           case tweet =>
-            val bytes = Injection[Tweet, Array[Byte]](tweet)
+            val bytes = Injection(tweet)
             info(s"Synchronously sending Tweet $tweet to topic ${producerApp.topic}")
             producerApp.send(bytes)
         }
