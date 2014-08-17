@@ -45,7 +45,8 @@ libraryDependencies ++= Seq(
     exclude("org.apache.zookeeper", "zookeeper"),
   "com.101tec" % "zkclient" % "0.4"
     exclude("org.apache.zookeeper", "zookeeper"),
-  "org.apache.curator" % "curator-test" % "2.4.0",
+  "org.apache.curator" % "curator-test" % "2.4.0"
+    exclude("org.slf4j", "slf4j-log4j12"),
   "commons-io" % "commons-io" % "2.4",
   // Logback with slf4j facade
   "ch.qos.logback" % "logback-classic" % "1.1.2",
