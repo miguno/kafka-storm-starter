@@ -655,6 +655,12 @@ environments locally and to Amazon AWS.
 
 ## Kafka
 
+Kafka in general:
+
+* [Apache Kafka 0.8 basic training - Verisign](http://www.slideshare.net/miguno/apache-kafka-08-basic-training-verisign)
+  -- training material (120 slides) that covers Kafka's core concepts, operating Kafka in production, and developing
+  Kafka applications
+
 Unit testing:
 
 * [buildlackey/cep/kafka-0.8.x](https://github.com/buildlackey/cep/tree/master/kafka-0.8.x)
