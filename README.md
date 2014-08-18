@@ -139,16 +139,11 @@ You will see output similar to the following (some parts removed to improve read
 7100 [Thread-29-kafka-spout] INFO  storm.kafka.PartitionManager - No partition information found, using configuration to determine offset
 7105 [Thread-29-kafka-spout] INFO  storm.kafka.PartitionManager - Starting Kafka 127.0.0.1:0 from offset 18
 7106 [Thread-29-kafka-spout] INFO  storm.kafka.ZkCoordinator - Finished refreshing
-7126 [Thread-29-kafka-spout] INFO  storm.kafka.PartitionManager - Committing offset for Partition{host=127.0.0.1:9092, partition=0}
-7126 [Thread-29-kafka-spout] INFO  storm.kafka.PartitionManager - Committed offset 18 for Partition{host=127.0.0.1:9092, partition=0} for topology: 47e82e34-fb36-427e-bde6-8cd971db2527
-9128 [Thread-29-kafka-spout] INFO  storm.kafka.PartitionManager - Committing offset for Partition{host=127.0.0.1:9092, partition=0}
-9129 [Thread-29-kafka-spout] INFO  storm.kafka.PartitionManager - Committed offset 18 for Partition{host=127.0.0.1:9092, partition=0} for topology: 47e82e34-fb36-427e-bde6-8cd971db2527
 ```
 
-At this point Storm is connected to Kafka (more precisely: to the `testing` topic in Kafka).  The last few lines from
-above -- "Committing offset ..." --- will be repeated again and again, because a) this demo Storm topology only reads
-from the Kafka topic but it does nothing to the data that was read and b) because we are not sending any data to the
-Kafka topic.
+At this point Storm is connected to Kafka (more precisely: to the `testing` topic in Kafka).  Not much will happen
+afterwards because we are not sending any data to the Kafka topic and b) this demo Storm topology only reads from the
+Kafka topic but it does nothing to the data that was read.
 
 Note that this example will actually run _two_ in-memory instances of ZooKeeper:  the first (listening at
 `127.0.0.1:2181/tcp`) is used by the Kafka instance, the second (listening at `127.0.0.1:2000/tcp`) is automatically
