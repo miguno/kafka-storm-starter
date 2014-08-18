@@ -142,7 +142,7 @@ You will see output similar to the following (some parts removed to improve read
 ```
 
 At this point Storm is connected to Kafka (more precisely: to the `testing` topic in Kafka).  Not much will happen
-afterwards because we are not sending any data to the Kafka topic and b) this demo Storm topology only reads from the
+afterwards because a) we are not sending any data to the Kafka topic and b) this demo Storm topology only reads from the
 Kafka topic but it does nothing to the data that was read.
 
 Note that this example will actually run _two_ in-memory instances of ZooKeeper:  the first (listening at
