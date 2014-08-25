@@ -23,8 +23,8 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "com.twitter" %% "bijection-core" % "0.6.2",
-  "com.twitter" %% "bijection-avro" % "0.6.2",
+  "com.twitter" %% "bijection-core" % "0.6.3",
+  "com.twitter" %% "bijection-avro" % "0.6.3",
   "com.twitter" %% "chill" % "0.4.0",
   "com.twitter" % "chill-avro" % "0.4.0",
   "com.twitter" %% "chill-bijection" % "0.4.0",
