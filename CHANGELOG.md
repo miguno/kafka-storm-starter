@@ -1,5 +1,9 @@
 # 0.2.0 (unreleased)
 
+BACKWARDS INCOMPATIBILITIES
+
+* Use Java 7 instead of Java 6.
+
 IMPROVEMENTS
 
 * Use Storm 0.9.2.  This includes two notable improvements:

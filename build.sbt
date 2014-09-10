@@ -73,12 +73,13 @@ javaOptions ++= Seq(
   "-Djava.net.preferIPv4Stack=true")
 
 javacOptions in Compile ++= Seq(
-  "-source", "1.6",
-  "-target", "1.6",
+  "-source", "1.7",
+  "-target", "1.7",
   "-Xlint:unchecked",
   "-Xlint:deprecation")
 
 scalacOptions ++= Seq(
+  "-target:jvm-1.7",
   "-unchecked",
   "-deprecation",
   "-feature",

@@ -261,41 +261,10 @@ See [git-flow](https://github.com/nvie/gitflow) and the introduction article
 
 Your development machine requires:
 
-* Oracle Java JDK 6 (version 6 is still recommended for use with Kafka and Storm).  The code works with Java 7, too.
+* Oracle JDK or OpenJDK for Java 7 (Oracle JDK preferred).
 
 This project also needs [Scala](http://www.scala-lang.org/) 2.10.4 and [sbt](http://www.scala-sbt.org/) 0.13.2, but
 these will be automatically downloaded and made available (locally/sandboxed) to the project as part of the build setup.
-
-
-### Install Oracle JDK 6 (Mac OS X)
-
-Download and install [Java 6 for Mac OS X](http://support.apple.com/kb/dl1572) aka "Java for OS X 2014-001".  This will
-give you Java 1.6.0_65.
-
-
-### Install Oracle JDK 6 (RHEL/CentOS 6)
-
-Follow the installations instructions for
-[Oracle JDK 6 on RHEL/CentOS 6](http://www.if-not-true-then-false.com/2010/install-sun-oracle-java-jdk-jre-6-on-fedora-centos-red-hat-rhel/)
-(untested!).
-
-Note: As a RHEL 6 user you may have access to a ready-to-use RPM package of Oracle JDK 6 in your existing yum
-repositories as part of the RedHat Network (RHN).  If so, you do not need to follow the instructions in the link above.
-Instead, you only need to run e.g. `sudo yum install java-1.6.0-sun-devel`
-([details](https://access.redhat.com/site/documentation/en-US/JBoss_Enterprise_Application_Platform/5/html/Installation_Guide/appe-install_jdk.html)).
-
-
-### Install Oracle JDK 6 (Ubuntu/Debian)
-
-Follow the installation instructions for
-[Oracle JDK 6 on Ubuntu/Debian](http://linuxg.net/how-to-install-oracle-java-jdk-678-on-ubuntu-13-04-12-10-12-04/)
-(untested!).
-
-Note: By following these instructions you will install Oracle JDK/JRE from a third-party PPA package repository
-(`ppa:webupd8team/java`, managed by [webupd8](http://www.webupd8.org/)).  Unfortunately Oracle does not provide official
-apt repositories for Ubuntu, and the Ubuntu team was required to remove "their" Oracle JDK/JRE packages from the Ubuntu
-repositories because of licensing issues with Oracle.
-
 
 
 <a name="Building-the-code"></a>
