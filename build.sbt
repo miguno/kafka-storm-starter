@@ -80,10 +80,26 @@ javacOptions in Compile ++= Seq(
 
 scalacOptions ++= Seq(
   "-target:jvm-1.7",
-  "-unchecked",
-  "-deprecation",
-  "-feature",
-  "-Ywarn-value-discard")
+  "-encoding", "UTF-8"
+)
+
+scalacOptions in Compile ++= Seq(
+  "-deprecation", // Emit warning and location for usages of deprecated APIs.
+  "-feature",  // Emit warning and location for usages of features that should be imported explicitly.
+  "-unchecked", // Enable additional warnings where generated code depends on assumptions.
+  "-Xlint", // Enable recommended additional warnings.
+  "-Ywarn-adapted-args", // Warn if an argument list is modified to match the receiver.
+  "-Ywarn-dead-code",
+  "-Ywarn-value-discard" // Warn when non-Unit expression results are unused.
+)
+
+scalacOptions in Test ~= { (options: Seq[String]) =>
+  options.filterNot(_ == "-Ywarn-value-discard").filterNot(_ == "-Ywarn-dead-code" /* to fix warnings due to Mockito */)
+}
+
+scalacOptions in ScoverageTest ~= { (options: Seq[String]) =>
+  options.filterNot(_ == "-Ywarn-value-discard").filterNot(_ == "-Ywarn-dead-code" /* to fix warnings due to Mockito */)
+}
 
 publishArtifact in Test := false
 
@@ -101,6 +117,6 @@ testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-u", "target/te
 testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-o")
 
 // See https://github.com/scoverage/scalac-scoverage-plugin
-ScoverageSbtPlugin.instrumentSettings
+instrumentSettings
 
 mainClass in (Compile,run) := Some("com.miguno.kafkastorm.storm.KafkaStormDemo")
