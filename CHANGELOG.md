@@ -11,6 +11,8 @@ IMPROVEMENTS
     * We use ZooKeeper 3.4.5, up from 3.3.x before.
 * AvroKafkaSinkBolt should not declare any output fields because it writes to Kafka only, it does not emit any tuples.
 * Reduce logging output when running tests to minimize distraction and confusion.
+* Disable ZooKeeper reconnection attempts in the test topology of `KafkaStormSpec` to prevent the Kafka spout from
+  logging ZooKeeper connection errors.
 
 BUG FIXES
 
