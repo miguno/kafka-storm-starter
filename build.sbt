@@ -111,8 +111,15 @@ testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-u", "target/te
 // Write test results to console.
 //
 // Tip: If you need to troubleshoot test runs, it helps to use the following reporting setup for ScalaTest.
+//      Notably these suggested settings will ensure that all test output is written sequentially so that it is easier
+//      to understand sequences of events, particularly cause and effect.
+//      (cf. http://www.scalatest.org/user_guide/using_the_runner, section "Configuring reporters")
 //
-//    testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oUDT", "-eUDT")
+//        testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oUDT", "-eUDT")
+//
+//        // This variant also disables ANSI color output in the terminal, which is helpful if you want to capture the
+//        // test output to file and then run grep/awk/sed/etc. on it.
+//        testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oWUDT", "-eWUDT")
 //
 testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-o")
 
