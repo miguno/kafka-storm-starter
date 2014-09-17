@@ -277,6 +277,7 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterEach w
       // Serialization config, see http://storm.incubator.apache.org/documentation/Serialization.html
       // Note: We haven't been able yet to come up with a KryoDecorator[Tweet] approach.
       conf.registerDecorator(classOf[TweetAvroKryoDecorator])
+      conf.put(Config.STORM_ZOOKEEPER_RETRY_TIMES, 0: Integer)
       conf
     }
 
