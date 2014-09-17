@@ -37,7 +37,8 @@ libraryDependencies ++= Seq(
     exclude("com.sun.jmx", "jmxri")
     exclude("org.slf4j", "slf4j-simple")
     exclude("log4j", "log4j")
-    exclude("org.apache.zookeeper", "zookeeper"),
+    exclude("org.apache.zookeeper", "zookeeper")
+    exclude("com.101tec", "zkclient"),
   "org.apache.storm" % "storm-core" % "0.9.2-incubating" % "provided"
     exclude("org.apache.zookeeper", "zookeeper")
     exclude("org.slf4j", "log4j-over-slf4j"),
