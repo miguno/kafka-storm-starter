@@ -643,6 +643,9 @@ Unit testing:
 
 Storm in general:
 
+* [Apache Storm 0.9 basic training - Verisign](http://www.slideshare.net/miguno/apache-storm-09-basic-training-verisign)
+  -- training material (130 slides) that covers Storm's core concepts, operating Storm in production, and developing
+  Storm applications
 * [Storm FAQ](http://storm.incubator.apache.org/documentation/FAQ.html)
 * [Config (Java API)](http://storm.incubator.apache.org/apidocs/backtype/storm/Config.html)
 * [Understanding the Internal Message Buffers of Storm](http://www.michael-noll.com/blog/2013/06/21/understanding-storm-internal-message-buffers/)
