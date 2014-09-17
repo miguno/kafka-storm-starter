@@ -83,6 +83,9 @@ test output:
 [info]   + When I submit the topology
 [info]   + Then the topology should properly count the words
 [info] KafkaStormSpec:
+[info] As a user of Storm
+[info] I want to read Avro-encoded data from Kafka
+[info] so that I can quickly build Kafka<->Storm data flows
 [info] Feature: AvroDecoderBolt[T]
 [info]   Scenario: User creates a Storm topology that uses AvroDecoderBolt
 [info]     Given a ZooKeeper instance
@@ -107,12 +110,12 @@ test output:
 [info]     When I run the Storm topology
 [info]     And I Avro-encode the tweets and use the Kafka producer app to sent them to Kafka
 [info]     Then the Kafka consumer app should receive the original tweets from the Storm topology
-[info] Run completed in 23 seconds, 111 milliseconds.
+[info] Run completed in 18 seconds, 673 milliseconds.
 [info] Total number of tests run: 25
 [info] Suites: completed 8, aborted 0
 [info] Tests: succeeded 25, failed 0, canceled 0, ignored 0, pending 0
 [info] All tests passed.
-[success] Total time: 34 s, completed Jun 30, 2014 11:07:22 AM
+[success] Total time: 30 s, completed Sep 17, 2014 9:07:31 AM
 ```
 
 
