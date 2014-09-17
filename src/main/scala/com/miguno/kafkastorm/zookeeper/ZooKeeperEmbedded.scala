@@ -12,7 +12,7 @@ import org.apache.curator.test.TestingServer
  */
 class ZooKeeperEmbedded(val port: Int = 2181) extends LazyLogging {
 
-  logger.debug(s"Starting embedded ZooKeeper server on port ${port}...")
+  logger.debug(s"Starting embedded ZooKeeper server on port $port...")
 
   private val server = new TestingServer(port)
 
@@ -20,9 +20,9 @@ class ZooKeeperEmbedded(val port: Int = 2181) extends LazyLogging {
    * Stop the instance.
    */
   def stop() {
-    logger.debug("Shutting down embedded ZooKeeper server...")
+    logger.debug(s"Shutting down embedded ZooKeeper server on port $port...")
     server.close()
-    logger.debug("Embedded ZooKeeper server shutdown completed")
+    logger.debug(s"Shutdown of embedded ZooKeeper server on port $port completed")
   }
 
   /**

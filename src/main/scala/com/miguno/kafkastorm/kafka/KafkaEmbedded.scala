@@ -61,19 +61,18 @@ class KafkaEmbedded(config: Properties = new Properties) extends LazyLogging {
    * Start the broker.
    */
   def start() {
-    logger.debug(s"Starting embedded Kafka broker at $brokerList (using ZooKeeper server at $zookeeperConnect) ...")
+    logger.debug(s"Starting embedded Kafka broker at $brokerList (with ZK server at $zookeeperConnect) ...")
     kafka.startup()
-    logger.debug("Embedded Kafka broker startup completed")
-  }
+    logger.debug(s"Startup of embedded Kafka broker at $brokerList completed (with ZK server at $zookeeperConnect)")  }
 
   /**
    * Stop the broker.
    */
   def stop() {
-    logger.debug("Shutting down embedded Kafka broker...")
+    logger.debug(s"Shutting down embedded Kafka broker at $brokerList (with ZK server at $zookeeperConnect)...")
     kafka.shutdown()
     FileUtils.deleteQuietly(logDir)
-    logger.debug("Embedded Kafka broker shutdown completed")
+    logger.debug(s"Shutdown of embedded Kafka broker at $brokerList completed (with ZK server at $zookeeperConnect)")
   }
 
 }
