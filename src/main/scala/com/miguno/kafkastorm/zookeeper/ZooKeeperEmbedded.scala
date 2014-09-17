@@ -1,6 +1,6 @@
 package com.miguno.kafkastorm.zookeeper
 
-import kafka.utils.Logging
+import com.miguno.kafkastorm.logging.LazyLogging
 import org.apache.curator.test.TestingServer
 
 /**
@@ -10,9 +10,9 @@ import org.apache.curator.test.TestingServer
  *
  * @param port The port (aka `clientPort`) to listen to.  Default: 2181.
  */
-class ZooKeeperEmbedded(val port: Int = 2181) extends Logging {
+class ZooKeeperEmbedded(val port: Int = 2181) extends LazyLogging {
 
-  debug(s"Starting embedded ZooKeeper server on port ${port}...")
+  logger.debug(s"Starting embedded ZooKeeper server on port ${port}...")
 
   private val server = new TestingServer(port)
 
@@ -20,9 +20,9 @@ class ZooKeeperEmbedded(val port: Int = 2181) extends Logging {
    * Stop the instance.
    */
   def stop() {
-    debug("Shutting down embedded ZooKeeper server...")
+    logger.debug("Shutting down embedded ZooKeeper server...")
     server.close()
-    debug("Embedded ZooKeeper server shutdown completed")
+    logger.debug("Embedded ZooKeeper server shutdown completed")
   }
 
   /**

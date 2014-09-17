@@ -1,6 +1,5 @@
 package com.miguno.kafkastorm.integration
 
-import _root_.kafka.utils.Logging
 import backtype.storm.testing._
 import backtype.storm.topology.TopologyBuilder
 import backtype.storm.tuple.{Fields, Values}
@@ -12,7 +11,7 @@ import org.scalatest._
  * https://github.com/xumingming/storm-lib/blob/master/src/jvm/storm/TestingApiDemo.java
  */
 @DoNotDiscover
-class StormSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenWhenThen with Logging {
+class StormSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenWhenThen {
 
   describe("Storm") {
 

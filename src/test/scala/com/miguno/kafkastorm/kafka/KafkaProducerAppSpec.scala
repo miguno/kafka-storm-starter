@@ -2,10 +2,9 @@ package com.miguno.kafkastorm.kafka
 
 import java.util.Properties
 
-import _root_.kafka.utils.Logging
 import org.scalatest.{FunSpec, GivenWhenThen, Matchers}
 
-class KafkaProducerAppSpec extends FunSpec with Matchers with GivenWhenThen with Logging {
+class KafkaProducerAppSpec extends FunSpec with Matchers with GivenWhenThen {
 
   private val AnyTopic = "some-topic"
   private val AnyBrokerList = "a:9092,b:9093"

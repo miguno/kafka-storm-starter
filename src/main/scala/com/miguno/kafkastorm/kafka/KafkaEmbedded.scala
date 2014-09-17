@@ -3,8 +3,8 @@ package com.miguno.kafkastorm.kafka
 import java.io.File
 import java.util.Properties
 
+import com.miguno.kafkastorm.logging.LazyLogging
 import kafka.server.{KafkaConfig, KafkaServerStartable}
-import kafka.utils.Logging
 import org.apache.commons.io.FileUtils
 
 /**
@@ -17,7 +17,7 @@ import org.apache.commons.io.FileUtils
  * @param config Broker configuration settings.  Used to modify, for example, on which port the broker should listen to.
  *               Note that you cannot change the `log.dirs` setting currently.
  */
-class KafkaEmbedded(config: Properties = new Properties) extends Logging {
+class KafkaEmbedded(config: Properties = new Properties) extends LazyLogging {
 
   private val defaultZkConnect = "127.0.0.1:2181"
   private val logDir = {
@@ -52,7 +52,7 @@ class KafkaEmbedded(config: Properties = new Properties) extends Logging {
     zkConnectLookup match {
       case Some(zkConnect) => zkConnect
       case _ =>
-        warn(s"zookeeper.connect is not configured -- falling back to default setting $defaultZkConnect")
+        logger.warn(s"zookeeper.connect is not configured -- falling back to default setting $defaultZkConnect")
         defaultZkConnect
     }
   }
@@ -61,19 +61,19 @@ class KafkaEmbedded(config: Properties = new Properties) extends Logging {
    * Start the broker.
    */
   def start() {
-    debug(s"Starting embedded Kafka broker at $brokerList (using ZooKeeper server at $zookeeperConnect) ...")
+    logger.debug(s"Starting embedded Kafka broker at $brokerList (using ZooKeeper server at $zookeeperConnect) ...")
     kafka.startup()
-    debug("Embedded Kafka broker startup completed")
+    logger.debug("Embedded Kafka broker startup completed")
   }
 
   /**
    * Stop the broker.
    */
   def stop() {
-    debug("Shutting down embedded Kafka broker...")
+    logger.debug("Shutting down embedded Kafka broker...")
     kafka.shutdown()
     FileUtils.deleteQuietly(logDir)
-    debug("Embedded Kafka broker shutdown completed")
+    logger.debug("Embedded Kafka broker shutdown completed")
   }
 
 }

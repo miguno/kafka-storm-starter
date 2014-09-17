@@ -3,9 +3,10 @@ package com.miguno.kafkastorm.integration
 import java.util.Properties
 
 import _root_.kafka.message.MessageAndMetadata
-import _root_.kafka.utils.{Logging, ZKStringSerializer}
+import _root_.kafka.utils.ZKStringSerializer
 import com.miguno.avro.Tweet
 import com.miguno.kafkastorm.kafka.{ConsumerTaskContext, KafkaConsumerApp, KafkaEmbedded, KafkaProducerApp}
+import com.miguno.kafkastorm.logging.LazyLogging
 import com.miguno.kafkastorm.zookeeper.ZooKeeperEmbedded
 import com.twitter.bijection.Injection
 import com.twitter.bijection.avro.SpecificAvroCodecs
@@ -19,7 +20,7 @@ import scala.concurrent.duration._
 import scala.language.reflectiveCalls
 
 @DoNotDiscover
-class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenWhenThen with Logging {
+class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenWhenThen with LazyLogging {
 
   implicit val specificAvroBinaryInjectionForTweet = SpecificAvroCodecs.toBinary[Tweet]
 
@@ -65,9 +66,9 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
     for {
       zc <- zkClient
     } {
-      info("ZooKeeper client: shutting down...")
+      logger.info("ZooKeeper client: shutting down...")
       zc.close()
-      info("ZooKeeper client: shutdown completed")
+      logger.info("ZooKeeper client: shutdown completed")
     }
 
     for {z <- zookeeperEmbedded} z.stop()
@@ -116,14 +117,14 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
           (m: MessageAndMetadata[Array[Byte], Array[Byte]], c: ConsumerTaskContext) => {
             val tweet = Injection.invert(m.message)
             for {t <- tweet} {
-              info(s"Consumer thread ${c.threadId}: received Tweet $t from partition ${m.partition} of topic ${m.topic} (offset: ${m.offset})")
+              logger.info(s"Consumer thread ${c.threadId}: received Tweet $t from partition ${m.partition} of topic ${m.topic} (offset: ${m.offset})")
               actualTweets += t
             }
           })
         val waitForConsumerStartup = 300.millis
-        debug(s"Waiting $waitForConsumerStartup for Kafka consumer threads to launch")
+        logger.debug(s"Waiting $waitForConsumerStartup for Kafka consumer threads to launch")
         Thread.sleep(waitForConsumerStartup.toMillis)
-        debug("Finished waiting for Kafka consumer threads to launch")
+        logger.debug("Finished waiting for Kafka consumer threads to launch")
 
         When("I start a synchronous Kafka producer that sends the tweets in Avro binary format")
         val producerApp = {
@@ -139,21 +140,21 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
         tweets foreach {
           case tweet =>
             val bytes = Injection(tweet)
-            info(s"Synchronously sending Tweet $tweet to topic ${producerApp.topic}")
+            logger.info(s"Synchronously sending Tweet $tweet to topic ${producerApp.topic}")
             producerApp.send(bytes)
         }
 
         Then("the consumer app should receive the tweets")
         val waitForConsumerToReadStormOutput = 300.millis
-        debug(s"Waiting $waitForConsumerToReadStormOutput for Kafka consumer threads to read messages")
+        logger.debug(s"Waiting $waitForConsumerToReadStormOutput for Kafka consumer threads to read messages")
         Thread.sleep(waitForConsumerToReadStormOutput.toMillis)
-        debug("Finished waiting for Kafka consumer threads to read messages")
+        logger.debug("Finished waiting for Kafka consumer threads to read messages")
         actualTweets.toSeq should be(f.messages.toSeq)
 
         // Cleanup
-        debug("Shutting down Kafka consumer threads")
+        logger.debug("Shutting down Kafka consumer threads")
         consumer.shutdown()
-        debug("Shutting down Kafka producer app")
+        logger.debug("Shutting down Kafka producer app")
         producerApp.shutdown()
       }
     }
@@ -184,14 +185,14 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
           (m: MessageAndMetadata[Array[Byte], Array[Byte]], c: ConsumerTaskContext) => {
             val tweet = Injection.invert(m.message)
             for {t <- tweet} {
-              info(s"Consumer thread ${c.threadId}: received Tweet $t from partition ${m.partition} of topic ${m.topic} (offset: ${m.offset})")
+              logger.info(s"Consumer thread ${c.threadId}: received Tweet $t from partition ${m.partition} of topic ${m.topic} (offset: ${m.offset})")
               actualTweets += t
             }
           })
         val waitForConsumerStartup = 300.millis
-        debug(s"Waiting $waitForConsumerStartup for Kafka consumer threads to launch")
+        logger.debug(s"Waiting $waitForConsumerStartup for Kafka consumer threads to launch")
         Thread.sleep(waitForConsumerStartup.toMillis)
-        debug("Finished waiting for Kafka consumer threads to launch")
+        logger.debug("Finished waiting for Kafka consumer threads to launch")
 
         When("I start an asynchronous Kafka producer that sends the tweets in Avro binary format")
         val producerApp = {
@@ -210,21 +211,21 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
         tweets foreach {
           case tweet =>
             val bytes = Injection(tweet)
-            info(s"Asynchronously sending Tweet $tweet to topic ${producerApp.topic}")
+            logger.info(s"Asynchronously sending Tweet $tweet to topic ${producerApp.topic}")
             producerApp.send(bytes)
         }
 
         Then("the consumer app should receive the tweets")
         val waitForConsumerToReadStormOutput = 300.millis
-        debug(s"Waiting $waitForConsumerToReadStormOutput for Kafka consumer threads to read messages")
+        logger.debug(s"Waiting $waitForConsumerToReadStormOutput for Kafka consumer threads to read messages")
         Thread.sleep(waitForConsumerToReadStormOutput.toMillis)
-        debug("Finished waiting for Kafka consumer threads to read messages")
+        logger.debug("Finished waiting for Kafka consumer threads to read messages")
         actualTweets.toSeq should be(f.messages.toSeq)
 
         // Cleanup
-        debug("Shutting down Kafka consumer threads")
+        logger.debug("Shutting down Kafka consumer threads")
         consumer.shutdown()
-        debug("Shutting down Kafka producer app")
+        logger.debug("Shutting down Kafka producer app")
         producerApp.shutdown()
       }
     }

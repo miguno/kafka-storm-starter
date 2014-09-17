@@ -2,7 +2,7 @@ package com.miguno.kafkastorm.integration
 
 import java.util.Properties
 
-import _root_.kafka.utils.{Logging, ZKStringSerializer}
+import _root_.kafka.utils.ZKStringSerializer
 import _root_.storm.kafka.{KafkaSpout, SpoutConfig, ZkHosts}
 import backtype.storm.generated.StormTopology
 import backtype.storm.spout.SchemeAsMultiScheme
@@ -11,6 +11,7 @@ import backtype.storm.topology.TopologyBuilder
 import backtype.storm.{Config, ILocalCluster, Testing}
 import com.miguno.avro.Tweet
 import com.miguno.kafkastorm.kafka._
+import com.miguno.kafkastorm.logging.LazyLogging
 import com.miguno.kafkastorm.storm.{AvroDecoderBolt, AvroKafkaSinkBolt, AvroScheme, TweetAvroKryoDecorator}
 import com.miguno.kafkastorm.zookeeper.ZooKeeperEmbedded
 import com.twitter.bijection.Injection
@@ -33,7 +34,7 @@ import scala.language.reflectiveCalls
  * reasons the integration tests are not simple "given/when/then" style tests.
  */
 @DoNotDiscover
-class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterEach with GivenWhenThen with Logging {
+class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterEach with GivenWhenThen with LazyLogging {
 
   implicit val specificAvroBinaryInjectionForTweet = SpecificAvroCodecs.toBinary[Tweet]
 
@@ -88,9 +89,9 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterEach w
     for {
       zc <- zkClient
     } {
-      info("ZooKeeper client: shutting down...")
+      logger.info("ZooKeeper client: shutting down...")
       zc.close()
-      info("ZooKeeper client: shutdown completed")
+      logger.info("ZooKeeper client: shutdown completed")
     }
 
     for {z <- zookeeperEmbedded} z.stop()
@@ -254,13 +255,13 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterEach w
       (m: MessageAndMetadata[Array[Byte], Array[Byte]], c: ConsumerTaskContext) => {
         val tweet = Injection.invert(m.message())
         for {t <- tweet} {
-          info(s"Consumer thread ${c.threadId}: received Tweet $t from partition ${m.partition} of topic ${m.topic} " +
-            s"(offset: ${m.offset})")
+          logger.info(s"Consumer thread ${c.threadId}: received Tweet $t from partition ${m.partition} of topic " +
+            s"${m.topic} (offset: ${m.offset})")
           actualTweets += t
         }
       })
     val waitForConsumerStartup = 300.millis
-    debug(s"Waiting $waitForConsumerStartup for the Kafka consumer to start up")
+    logger.debug(s"Waiting $waitForConsumerStartup for the Kafka consumer to start up")
     Thread.sleep(waitForConsumerStartup.toMillis)
 
     And("a Storm topology configuration that registers an Avro Kryo decorator for Tweet")
@@ -297,7 +298,7 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterEach w
       //stormClusterConfig.put(Config.STORM_ZOOKEEPER_SERVERS, List(zookeeper.hostname).asJava)
       //stormClusterConfig.put(Config.STORM_ZOOKEEPER_PORT, zookeeper.port: Integer)
 
-      debug(s"Storm cluster configuration: $stormClusterConfig")
+      logger.debug(s"Storm cluster configuration: $stormClusterConfig")
       mkClusterParam.setDaemonConf(stormClusterConfig)
       mkClusterParam
     }
@@ -306,26 +307,26 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterEach w
         val topologyName = "storm-kafka-integration-test"
         stormCluster.submitTopology(topologyName, topologyConfig, topology)
         val waitForTopologyStartup = 3.seconds
-        debug(s"Waiting $waitForTopologyStartup for Storm topology to start up")
+        logger.debug(s"Waiting $waitForTopologyStartup for Storm topology to start up")
         Thread.sleep(waitForTopologyStartup.toMillis)
 
         And("I Avro-encode the tweets and use the Kafka producer app to sent them to Kafka")
         tweets foreach {
           case tweet =>
             val bytes = Injection(tweet)
-            info(s"Synchronously sending Tweet $tweet to topic ${producerApp.topic}")
+            logger.info(s"Synchronously sending Tweet $tweet to topic ${producerApp.topic}")
             producerApp.send(bytes)
         }
 
         val waitForStormToReadFromKafka = 1.second
-        debug(s"Waiting $waitForStormToReadFromKafka for Storm to read from Kafka")
+        logger.debug(s"Waiting $waitForStormToReadFromKafka for Storm to read from Kafka")
         Thread.sleep(waitForStormToReadFromKafka.toMillis)
       }
     })
 
     Then("the Kafka consumer app should receive the original tweets from the Storm topology")
     val waitForConsumerToReadStormOutput = 300.millis
-    debug(s"Waiting $waitForConsumerToReadStormOutput for Kafka consumer to read Storm output from Kafka")
+    logger.debug(s"Waiting $waitForConsumerToReadStormOutput for Kafka consumer to read Storm output from Kafka")
     Thread.sleep(waitForConsumerToReadStormOutput.toMillis)
     actualTweets.toSeq should be(tweets.toSeq)
 

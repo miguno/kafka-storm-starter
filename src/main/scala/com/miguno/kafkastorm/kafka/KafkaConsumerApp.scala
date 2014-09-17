@@ -3,10 +3,10 @@ package com.miguno.kafkastorm.kafka
 import java.util.Properties
 import java.util.concurrent.Executors
 
+import com.miguno.kafkastorm.logging.LazyLogging
 import kafka.consumer.{Consumer, ConsumerConfig, KafkaStream}
 import kafka.message.MessageAndMetadata
 import kafka.serializer.DefaultDecoder
-import kafka.utils.Logging
 
 /**
  * Demonstrates how to implement a simple Kafka consumer application to read data from Kafka.
@@ -25,7 +25,7 @@ class KafkaConsumerApp(
                      val zookeeperConnect: String,
                      val numThreads: Int,
                      config: Properties = new Properties
-                     ) extends Logging {
+                     ) extends LazyLogging {
 
   private val effectiveConfig = {
     val c = new Properties
@@ -38,7 +38,7 @@ class KafkaConsumerApp(
   private val executor = Executors.newFixedThreadPool(numThreads)
   private val consumerConnector = Consumer.create(new ConsumerConfig(effectiveConfig))
 
-  info(s"Connecting to topic $topic via ZooKeeper $zookeeperConnect")
+  logger.info(s"Connecting to topic $topic via ZooKeeper $zookeeperConnect")
 
   def startConsumers(f: (MessageAndMetadata[Array[Byte], Array[Byte]], ConsumerTaskContext) => Unit) {
     val topicCountMap = Map(topic -> numThreads)
@@ -69,17 +69,18 @@ class KafkaConsumerApp(
 }
 
 class ConsumerTask[K, V, C <: ConsumerTaskContext](stream: KafkaStream[K, V], context: C,
-                                                   f: (MessageAndMetadata[K, V], C) => Unit) extends Runnable with Logging {
+                                                   f: (MessageAndMetadata[K, V], C) => Unit)
+  extends Runnable with LazyLogging {
 
   override def run() {
-    info(s"Consumer thread ${context.threadId} started")
+    logger.info(s"Consumer thread ${context.threadId} started")
     stream foreach {
       case msg: MessageAndMetadata[_, _] =>
-        trace(s"Thread ${context.threadId} received message: " + msg)
+        logger.trace(s"Thread ${context.threadId} received message: " + msg)
         f(msg, context)
-      case _ => trace(s"Received unexpected message type from broker")
+      case _ => logger.trace(s"Received unexpected message type from broker")
     }
-    info(s"Shutting down consumer thread ${context.threadId}")
+    logger.info(s"Shutting down consumer thread ${context.threadId}")
   }
 
 }
