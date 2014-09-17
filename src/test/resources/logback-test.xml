@@ -30,6 +30,11 @@
     <appender-ref ref="A1"/>
   </root>
 
+  <logger name="com.miguno.kafkastorm.storm.AvroDecoderBolt" additivity="false">
+    <level value="OFF" />
+    <appender-ref ref="ACCESS" />
+  </logger>
+
   <logger name="backtype.storm.security.auth.authorizer" additivity="false">
     <level value="ERROR" />
     <appender-ref ref="ACCESS" />
