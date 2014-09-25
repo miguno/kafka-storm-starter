@@ -2,7 +2,7 @@
 
 Code examples that show how to integrate
 [Apache Kafka](http://kafka.apache.org/) 0.8+ (latest stable) with
-[Apache Storm](http://storm.incubator.apache.org/) 0.9+ (latest stable),
+[Apache Storm](http://storm.apache.org/) 0.9+ (latest stable),
 while using [Apache Avro](http://avro.apache.org/) as the data serialization format.
 
 ---
@@ -195,7 +195,7 @@ What features do we showcase in kafka-storm-starter?  Note that we focus on show
           want to profile your topology which of the two approaches works best for your use case.
     * [TweetAvroKryoDecorator](src/main/scala/com/miguno/kafkastorm/storm/TweetAvroKryoDecorator.scala):
       A custom `backtype.storm.serialization.IKryoDecorator`, i.e. a custom
-      [Kryo serializer for Storm](http://storm.incubator.apache.org/documentation/Serialization.html).
+      [Kryo serializer for Storm](http://storm.apache.org/documentation/Serialization.html).
         * Unfortunately we have not figured out a way to implement a parameterized `AvroKryoDecorator[T]` variant yet.
           (A "straight-forward" approach we tried -- similar to the other parameterized components -- compiled fine but
           failed at runtime when running the tests).  Code contributions are welcome!
@@ -233,7 +233,7 @@ What features do we showcase in kafka-storm-starter?  Note that we focus on show
   handles our Avro-derived Java class `Tweet` from [twitter.avsc](src/main/avro/twitter.avsc).
 * Unit and integration tests are implemented with [ScalaTest](http://scalatest.org/).
 * We use [ZooKeeper 3.4.5](https://zookeeper.apache.org/).
-* We use the [official Kafka spout](https://github.com/apache/incubator-storm/tree/master/external/storm-kafka) of the
+* We use the [official Kafka spout](https://github.com/apache/storm/tree/master/external/storm-kafka) of the
   Storm project, which is compatible with Kafka 0.8.
 
 
@@ -483,14 +483,14 @@ handles these cases correctly by first creating the parent node."
 
 ### Storm `LocalCluster` and ZooKeeper
 
-[LocalCluster](https://github.com/apache/incubator-storm/blob/master/storm-core/src/clj/backtype/storm/LocalCluster.clj)
+[LocalCluster](https://github.com/apache/storm/blob/master/storm-core/src/clj/backtype/storm/LocalCluster.clj)
 starts an embedded ZooKeeper instance listening at `localhost:2000/tcp`.  If a different process is already bound to
 `2000/tcp`, then Storm will increment the embedded ZooKeeper's port until it finds a free port (`2000` -> `2001` ->
 `2002`, and so on).  `LocalCluster` then reads the Storm defaults and overrides some of Storm's configuration (see the
 `mk-local-storm-cluster` function in
-[testing.clj](https://github.com/apache/incubator-storm/blob/master/storm-core/src/clj/backtype/storm/testing.clj) and
+[testing.clj](https://github.com/apache/storm/blob/master/storm-core/src/clj/backtype/storm/testing.clj) and
 the `mk-inprocess-zookeeper` function in
-[zookeeper.clj](https://github.com/apache/incubator-storm/blob/master/storm-core/src/clj/backtype/storm/zookeeper.clj)
+[zookeeper.clj](https://github.com/apache/storm/blob/master/storm-core/src/clj/backtype/storm/zookeeper.clj)
 for details):
 
     STORM-CLUSTER-MODE "local"
@@ -649,8 +649,8 @@ Storm in general:
 * [Apache Storm 0.9 basic training - Verisign](http://www.slideshare.net/miguno/apache-storm-09-basic-training-verisign)
   -- training material (130 slides) that covers Storm's core concepts, operating Storm in production, and developing
   Storm applications
-* [Storm FAQ](http://storm.incubator.apache.org/documentation/FAQ.html)
-* [Config (Java API)](http://storm.incubator.apache.org/apidocs/backtype/storm/Config.html)
+* [Storm FAQ](http://storm.apache.org/documentation/FAQ.html)
+* [Config (Java API)](http://storm.apache.org/apidocs/backtype/storm/Config.html)
 * [Understanding the Internal Message Buffers of Storm](http://www.michael-noll.com/blog/2013/06/21/understanding-storm-internal-message-buffers/)
 * [Sending Metrics From Storm to Graphite](http://www.michael-noll.com/blog/2013/11/06/sending-metrics-from-storm-to-graphite/)
 
