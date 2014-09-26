@@ -4,8 +4,13 @@ import java.io.File
 import java.util.Properties
 
 import com.miguno.kafkastorm.logging.LazyLogging
+import kafka.admin.AdminUtils
 import kafka.server.{KafkaConfig, KafkaServerStartable}
+import kafka.utils.ZKStringSerializer
+import org.I0Itec.zkclient.ZkClient
 import org.apache.commons.io.FileUtils
+
+import scala.concurrent.duration._
 
 /**
  * Runs an in-memory, "embedded" instance of a Kafka broker, which listens at `127.0.0.1:9092` by default.
@@ -63,7 +68,8 @@ class KafkaEmbedded(config: Properties = new Properties) extends LazyLogging {
   def start() {
     logger.debug(s"Starting embedded Kafka broker at $brokerList (with ZK server at $zookeeperConnect) ...")
     kafka.startup()
-    logger.debug(s"Startup of embedded Kafka broker at $brokerList completed (with ZK server at $zookeeperConnect)")  }
+    logger.debug(s"Startup of embedded Kafka broker at $brokerList completed (with ZK server at $zookeeperConnect)")
+  }
 
   /**
    * Stop the broker.
@@ -73,6 +79,19 @@ class KafkaEmbedded(config: Properties = new Properties) extends LazyLogging {
     kafka.shutdown()
     FileUtils.deleteQuietly(logDir)
     logger.debug(s"Shutdown of embedded Kafka broker at $brokerList completed (with ZK server at $zookeeperConnect)")
+  }
+
+  def createTopic(topic: String, partitions: Int =  1, replicationFactor: Int = 1, config: Properties = new Properties): Unit = {
+    logger.debug(s"Creating topic { name: $topic, partitions: $partitions, replicationFactor: $replicationFactor, config: $config }")
+    val sessionTimeout = 10.seconds
+    val connectionTimeout = 8.seconds
+    // Note: You must initialize the ZkClient with ZKStringSerializer.  If you don't, then createTopic() will only
+    // seem to work (it will return without error).  Topic will exist in only ZooKeeper, and will be returned when
+    // listing topics, but Kafka itself does not create the topic.
+    val zkClient = new ZkClient(zookeeperConnect, sessionTimeout.toMillis.toInt, connectionTimeout.toMillis.toInt,
+      ZKStringSerializer)
+    AdminUtils.createTopic(zkClient, topic, partitions, replicationFactor, config)
+    zkClient.close()
   }
 
 }

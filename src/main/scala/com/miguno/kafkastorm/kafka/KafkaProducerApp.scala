@@ -10,17 +10,24 @@ import kafka.producer.{KeyedMessage, Producer, ProducerConfig}
  * Don't read too much into the actual implementation of this class.  Its sole purpose is to showcase the use of the
  * Kafka API.
  *
- * @param topic The Kafka topic to send data to.
  * @param brokerList  Value for Kafka's `metadata.broker.list` setting.
  * @param producerConfig Additional producer configuration settings.
+ * @param defaultTopic The default Kafka topic to send data to;  the default topic is used as a fallback when you do not
+ *                     provide a specific topic when calling `send()`.
+ * @param producer An existing [[kafka.producer.Producer]] instance to use for sending data to Kafka.  Primarily used
+ *                 for testing.  If `producer` is set, then we ignore the `brokerList` and `producerConfig` parameters.
  */
-case class KafkaProducerApp(
-                             val topic: String,
-                             val brokerList: String,
-                             producerConfig: Properties = new Properties
-                             ) {
+case class KafkaProducerApp(brokerList: String,
+                            producerConfig: Properties = new Properties,
+                            defaultTopic: Option[String] = None,
+                            producer: Option[Producer[Array[Byte], Array[Byte]]] = None) {
 
-  private val producer = {
+  type Key = Array[Byte]
+  type Val = Array[Byte]
+
+  require(brokerList == null || !brokerList.isEmpty, "Must set broker list")
+
+  private val p = producer getOrElse {
     val effectiveConfig = {
       val c = new Properties
       c.load(this.getClass.getResourceAsStream("/producer-defaults.properties"))
@@ -33,19 +40,34 @@ case class KafkaProducerApp(
 
   // The configuration field of the wrapped producer is immutable (including its nested fields), so it's safe to expose
   // it directly.
-  val config = producer.config
+  val config = p.config
 
-  private def toMessage(key: Option[Array[Byte]], value: Array[Byte]): KeyedMessage[Array[Byte], Array[Byte]] =
+  private def toMessage(value: Val, key: Option[Key] = None, topic: Option[String] = None): KeyedMessage[Key, Val] = {
+    val t = topic.getOrElse(defaultTopic.getOrElse(throw new IllegalArgumentException("Must provide topic or default topic")))
+    require(!t.isEmpty, "Topic must not be empty")
     key match {
-      case Some(key) => new KeyedMessage(topic, key, value)
-      case _ => new KeyedMessage(topic, value)
+      case Some(key) => new KeyedMessage(t, key, value)
+      case _ => new KeyedMessage(t, value)
     }
+  }
 
-  def send(key: Array[Byte], value: Array[Byte]): Unit = producer.send(toMessage(Some(key), value))
+  def send(key: Key, value: Val, topic: Option[String] = None) {
+    p.send(toMessage(value, Option(key), topic))
+  }
 
-  def send(value: Array[Byte]): Unit = producer.send(toMessage(None, value))
+  def send(value: Val, topic: Option[String]) {
+    send(null, value, topic)
+  }
 
-  def shutdown(): Unit = producer.close()
+  def send(value: Val, topic: String) {
+    send(null, value, Option(topic))
+  }
+
+  def send(value: Val) {
+    send(null, value, None)
+  }
+
+  def shutdown(): Unit = p.close()
 
 }
 
@@ -68,13 +90,17 @@ case class KafkaProducerApp(
  * @param brokerList  Value for Kafka's `metadata.broker.list` setting.
  * @param config Additional producer configuration settings.
  */
-abstract class KafkaProducerAppFactory(topic: String, brokerList: String, config: Properties) extends Serializable {
+abstract class KafkaProducerAppFactory(brokerList: String, config: Properties, topic: Option[String] = None)
+  extends Serializable {
+
   def newInstance(): KafkaProducerApp
 }
 
-class BaseKafkaProducerAppFactory(topic: String, brokerList: String, config: Properties = new Properties)
-  extends KafkaProducerAppFactory(topic, brokerList, config) {
+class BaseKafkaProducerAppFactory(brokerList: String,
+                                  config: Properties = new Properties,
+                                  defaultTopic: Option[String] = None)
+  extends KafkaProducerAppFactory(brokerList, config, defaultTopic) {
 
-  override def newInstance() = new KafkaProducerApp(topic, brokerList, config)
+  override def newInstance() = new KafkaProducerApp(brokerList, config, defaultTopic)
 
 }
