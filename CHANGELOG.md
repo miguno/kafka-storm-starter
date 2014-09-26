@@ -13,6 +13,9 @@ IMPROVEMENTS
 * Reduce logging output when running tests to minimize distraction and confusion.
 * Disable ZooKeeper reconnection attempts in the test topology of `KafkaStormSpec` to prevent the Kafka spout from
   logging ZooKeeper connection errors.
+* Improve and consolidate the setup we use to lauch in-memory Kafka and ZooKeeper clusters during testing.
+* Add startup() and shutdown() methods to Kafka consumer apps to improve lifecycle management.
+* Kafka producer apps have more granular control to which topics messages are being sent.
 
 BUG FIXES
 
