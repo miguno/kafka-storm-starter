@@ -3,16 +3,12 @@ package com.miguno.kafkastorm.integration
 import java.util.Properties
 
 import _root_.kafka.message.MessageAndMetadata
-import _root_.kafka.utils.ZKStringSerializer
 import com.miguno.avro.Tweet
-import com.miguno.kafkastorm.kafka.{ConsumerTaskContext, KafkaConsumerApp, KafkaEmbedded, KafkaProducerApp}
+import com.miguno.kafkastorm.kafka.ConsumerTaskContext
 import com.miguno.kafkastorm.logging.LazyLogging
-import com.miguno.kafkastorm.zookeeper.ZooKeeperEmbedded
+import com.miguno.kafkastorm.testing.{EmbeddedKafkaZooKeeperCluster, KafkaTopic}
 import com.twitter.bijection.Injection
 import com.twitter.bijection.avro.SpecificAvroCodecs
-import kafka.admin.AdminUtils
-import org.I0Itec.zkclient.ZkClient
-import org.apache.curator.test.InstanceSpec
 import org.scalatest._
 
 import scala.collection.mutable
@@ -20,60 +16,20 @@ import scala.concurrent.duration._
 import scala.language.reflectiveCalls
 
 @DoNotDiscover
-class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenWhenThen with LazyLogging {
+class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterEach with GivenWhenThen with LazyLogging {
 
   implicit val specificAvroBinaryInjectionForTweet = SpecificAvroCodecs.toBinary[Tweet]
 
-  private val testTopic = "testing"
-  private val testTopicNumPartitions = 1
-  private val testTopicReplicationFactor = 1
-  private val zookeeperPort = InstanceSpec.getRandomPort
-  private val kafkaPort = InstanceSpec.getRandomPort
+  private val topic = KafkaTopic("testing")
+  private val kafkaZkCluster = new EmbeddedKafkaZooKeeperCluster(topics = Seq(topic))
 
-  private var zookeeperEmbedded: Option[ZooKeeperEmbedded] = None
-  private var zkClient: Option[ZkClient] = None
-  private var kafkaEmbedded: Option[KafkaEmbedded] = None
-
-  override def beforeAll() {
-    // Start embedded ZooKeeper server
-    zookeeperEmbedded = Some(new ZooKeeperEmbedded(zookeeperPort))
-
-    for {z <- zookeeperEmbedded} {
-      // Start embedded Kafka broker
-      val brokerConfig = new Properties
-      brokerConfig.put("zookeeper.connect", z.connectString)
-      brokerConfig.put("port", kafkaPort.toString)
-      kafkaEmbedded = Some(new KafkaEmbedded(brokerConfig))
-      for {k <- kafkaEmbedded} k.start()
-
-      // Create test topic
-      val sessionTimeout = 30.seconds
-      val connectionTimeout = 30.seconds
-      zkClient = Some(new ZkClient(z.connectString, sessionTimeout.toMillis.toInt, connectionTimeout.toMillis.toInt,
-        ZKStringSerializer))
-      for {
-        zc <- zkClient
-      } {
-        val topicConfig = new Properties
-        AdminUtils.createTopic(zc, testTopic, testTopicNumPartitions, testTopicReplicationFactor, topicConfig)
-      }
-    }
+  override def beforeEach() {
+    kafkaZkCluster.start()
   }
 
-  override def afterAll() {
-    for {k <- kafkaEmbedded} k.stop()
-
-    for {
-      zc <- zkClient
-    } {
-      logger.info("ZooKeeper client: shutting down...")
-      zc.close()
-      logger.info("ZooKeeper client: shutdown completed")
-    }
-
-    for {z <- zookeeperEmbedded} z.stop()
+  override def afterEach() {
+    kafkaZkCluster.stop()
   }
-
 
   val fixture = {
     val BeginningOfEpoch = 0.seconds
@@ -92,142 +48,94 @@ class KafkaSpec extends FunSpec with Matchers with BeforeAndAfterAll with GivenW
   describe("Kafka") {
 
     it("should synchronously send and receive a Tweet in Avro format", IntegrationTest) {
-      for {
-        z <- zookeeperEmbedded
-        k <- kafkaEmbedded
-      } {
-        Given("a ZooKeeper instance")
-        And("a Kafka broker instance")
-        And("some tweets")
-        val f = fixture
-        val tweets = f.messages
-        And("a single-threaded Kafka consumer group")
-        // The Kafka consumer group must be running before the first messages are being sent to the topic.
-        val consumer = {
-          val numConsumerThreads = 1
-          val config = {
-            val c = new Properties
-            c.put("group.id", "test-consumer")
-            c
-          }
-          new KafkaConsumerApp(testTopic, z.connectString, numConsumerThreads, config)
+      Given("a ZooKeeper instance")
+      And("a Kafka broker instance")
+      And("some tweets")
+      val tweets = fixture.messages
+      And("a single-threaded Kafka consumer group")
+      // The Kafka consumer group must be running before the first messages are being sent to the topic.
+      val actualTweets = new mutable.SynchronizedQueue[Tweet]
+      def consume(m: MessageAndMetadata[Array[Byte], Array[Byte]], c: ConsumerTaskContext): Unit = {
+        val tweet = Injection.invert[Tweet, Array[Byte]](m.message)
+        for {t <- tweet} {
+          logger.info(s"Consumer thread ${c.threadId}: received Tweet $t from ${m.topic}:${m.partition}:${m.offset}")
+          actualTweets += t
         }
-        val actualTweets = new mutable.SynchronizedQueue[Tweet]
-        consumer.startConsumers(
-          (m: MessageAndMetadata[Array[Byte], Array[Byte]], c: ConsumerTaskContext) => {
-            val tweet = Injection.invert(m.message)
-            for {t <- tweet} {
-              logger.info(s"Consumer thread ${c.threadId}: received Tweet $t from partition ${m.partition} of topic ${m.topic} (offset: ${m.offset})")
-              actualTweets += t
-            }
-          })
-        val waitForConsumerStartup = 300.millis
-        logger.debug(s"Waiting $waitForConsumerStartup for Kafka consumer threads to launch")
-        Thread.sleep(waitForConsumerStartup.toMillis)
-        logger.debug("Finished waiting for Kafka consumer threads to launch")
-
-        When("I start a synchronous Kafka producer that sends the tweets in Avro binary format")
-        val producerApp = {
-          val config = {
-            val c = new Properties
-            c.put("producer.type", "sync")
-            c.put("client.id", "test-sync-producer")
-            c.put("request.required.acks", "1")
-            c
-          }
-          new KafkaProducerApp(testTopic, k.brokerList, config)
-        }
-        tweets foreach {
-          case tweet =>
-            val bytes = Injection(tweet)
-            logger.info(s"Synchronously sending Tweet $tweet to topic ${producerApp.topic}")
-            producerApp.send(bytes)
-        }
-
-        Then("the consumer app should receive the tweets")
-        val waitForConsumerToReadStormOutput = 300.millis
-        logger.debug(s"Waiting $waitForConsumerToReadStormOutput for Kafka consumer threads to read messages")
-        Thread.sleep(waitForConsumerToReadStormOutput.toMillis)
-        logger.debug("Finished waiting for Kafka consumer threads to read messages")
-        actualTweets.toSeq should be(f.messages.toSeq)
-
-        // Cleanup
-        logger.debug("Shutting down Kafka consumer threads")
-        consumer.shutdown()
-        logger.debug("Shutting down Kafka producer app")
-        producerApp.shutdown()
       }
+      kafkaZkCluster.createAndStartConsumer(topic.name, consume)
+
+      When("I start a synchronous Kafka producer that sends the tweets in Avro binary format")
+      val producerApp = {
+        val c = new Properties
+        c.put("producer.type", "sync")
+        c.put("client.id", "test-sync-producer")
+        c.put("request.required.acks", "1")
+        kafkaZkCluster.createProducer(topic.name, c).get
+      }
+      tweets foreach {
+        case tweet =>
+          val bytes = Injection[Tweet, Array[Byte]](tweet)
+          logger.info(s"Synchronously sending Tweet $tweet to topic ${producerApp.defaultTopic}")
+          producerApp.send(bytes)
+      }
+
+      Then("the consumer app should receive the tweets")
+      val waitForConsumerToReadStormOutput = 300.millis
+      logger.debug(s"Waiting $waitForConsumerToReadStormOutput for Kafka consumer threads to read messages")
+      Thread.sleep(waitForConsumerToReadStormOutput.toMillis)
+      logger.debug("Finished waiting for Kafka consumer threads to read messages")
+      actualTweets.toSeq should be(tweets)
     }
 
     it("should asynchronously send and receive a Tweet in Avro format", IntegrationTest) {
-      for {
-        z <- zookeeperEmbedded
-        k <- kafkaEmbedded
-      } {
-        Given("a ZooKeeper instance")
-        And("a Kafka broker instance")
-        And("some tweets")
-        val f = fixture
-        val tweets = f.messages
-        And("a single-threaded Kafka consumer group")
-        // The Kafka consumer group must be running before the first messages are being sent to the topic.
-        val consumer = {
-          val numConsumerThreads = 1
-          val config = {
-            val c = new Properties
-            c.put("group.id", "test-consumer")
-            c
-          }
-          new KafkaConsumerApp(testTopic, z.connectString, numConsumerThreads, config)
+      Given("a ZooKeeper instance")
+      And("a Kafka broker instance")
+      And("some tweets")
+      val tweets = fixture.messages
+      And("a single-threaded Kafka consumer group")
+      // The Kafka consumer group must be running before the first messages are being sent to the topic.
+      val actualTweets = new mutable.SynchronizedQueue[Tweet]
+      def consume(m: MessageAndMetadata[Array[Byte], Array[Byte]], c: ConsumerTaskContext) {
+        val tweet = Injection.invert[Tweet, Array[Byte]](m.message())
+        for {t <- tweet} {
+          logger.info(s"Consumer thread ${c.threadId}: received Tweet $t from ${m.topic}:${m.partition}:${m.offset}")
+          actualTweets += t
         }
-        val actualTweets = new mutable.SynchronizedQueue[Tweet]
-        consumer.startConsumers(
-          (m: MessageAndMetadata[Array[Byte], Array[Byte]], c: ConsumerTaskContext) => {
-            val tweet = Injection.invert(m.message)
-            for {t <- tweet} {
-              logger.info(s"Consumer thread ${c.threadId}: received Tweet $t from partition ${m.partition} of topic ${m.topic} (offset: ${m.offset})")
-              actualTweets += t
-            }
-          })
-        val waitForConsumerStartup = 300.millis
-        logger.debug(s"Waiting $waitForConsumerStartup for Kafka consumer threads to launch")
-        Thread.sleep(waitForConsumerStartup.toMillis)
-        logger.debug("Finished waiting for Kafka consumer threads to launch")
-
-        When("I start an asynchronous Kafka producer that sends the tweets in Avro binary format")
-        val producerApp = {
-          val config = {
-            val c = new Properties
-            c.put("producer.type", "async")
-            c.put("client.id", "test-sync-producer")
-            c.put("request.required.acks", "1")
-            // We must set `batch.num.messages` and/or `queue.buffering.max.ms` so that the async producer will actually
-            // send our (typically few) test messages before the unit test finishes.
-            c.put("batch.num.messages", tweets.size.toString)
-            c
-          }
-          new KafkaProducerApp(testTopic, k.brokerList, config)
-        }
-        tweets foreach {
-          case tweet =>
-            val bytes = Injection(tweet)
-            logger.info(s"Asynchronously sending Tweet $tweet to topic ${producerApp.topic}")
-            producerApp.send(bytes)
-        }
-
-        Then("the consumer app should receive the tweets")
-        val waitForConsumerToReadStormOutput = 300.millis
-        logger.debug(s"Waiting $waitForConsumerToReadStormOutput for Kafka consumer threads to read messages")
-        Thread.sleep(waitForConsumerToReadStormOutput.toMillis)
-        logger.debug("Finished waiting for Kafka consumer threads to read messages")
-        actualTweets.toSeq should be(f.messages.toSeq)
-
-        // Cleanup
-        logger.debug("Shutting down Kafka consumer threads")
-        consumer.shutdown()
-        logger.debug("Shutting down Kafka producer app")
-        producerApp.shutdown()
       }
+      kafkaZkCluster.createAndStartConsumer(topic.name, consume)
+
+      val waitForConsumerStartup = 300.millis
+      logger.debug(s"Waiting $waitForConsumerStartup for Kafka consumer threads to launch")
+      Thread.sleep(waitForConsumerStartup.toMillis)
+      logger.debug("Finished waiting for Kafka consumer threads to launch")
+
+      When("I start an asynchronous Kafka producer that sends the tweets in Avro binary format")
+      val producerApp = {
+        val asyncConfig = {
+          val c = new Properties
+          c.put("producer.type", "async")
+          c.put("client.id", "test-sync-producer")
+          c.put("request.required.acks", "1")
+          // We must set `batch.num.messages` and/or `queue.buffering.max.ms` so that the async producer will actually
+          // send our (typically few) test messages before the unit test finishes.
+          c.put("batch.num.messages", tweets.size.toString)
+          c
+        }
+        kafkaZkCluster.createProducer(topic.name, asyncConfig).get
+      }
+      tweets foreach {
+        case tweet =>
+          val bytes = Injection[Tweet, Array[Byte]](tweet)
+          logger.info(s"Asynchronously sending Tweet $tweet to topic ${producerApp.defaultTopic}")
+          producerApp.send(bytes)
+      }
+
+      Then("the consumer app should receive the tweets")
+      val waitForConsumerToReadStormOutput = 300.millis
+      logger.debug(s"Waiting $waitForConsumerToReadStormOutput for Kafka consumer threads to read messages")
+      Thread.sleep(waitForConsumerToReadStormOutput.toMillis)
+      logger.debug("Finished waiting for Kafka consumer threads to read messages")
+      actualTweets.toSeq should be(tweets)
     }
 
   }
