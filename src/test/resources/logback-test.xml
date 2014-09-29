@@ -44,6 +44,12 @@
     <appender-ref ref="ACCESS"/>
   </logger>
 
+  <!-- Jetty (used by Spark) is very chatty -->
+  <logger name="org.eclipse.jetty" additivity="false" >
+    <level value="ERROR"/>
+    <appender-ref ref="ACCESS"/>
+  </logger>
+
   <!--
     Squelch CuratorFrameworkImpl to prevent the following error messages from polluting our test output:
 
@@ -77,6 +83,17 @@
     messages in the first place as we are not certain yet what causes them.
   -->
   <logger name="org.apache.curator.framework.imps.CuratorFrameworkImpl" additivity="false" >
+    <level value="OFF"/>
+    <appender-ref ref="ACCESS"/>
+  </logger>
+
+  <!--
+    Squelch NIOServerCnxnFactory from reporting SparkException's, which are expected during the shutdown phase of our
+    Spark Streaming examples:
+
+        org.apache.spark.SparkException: Job cancelled because SparkContext was shut down
+  -->
+  <logger name="org.apache.zookeeper.server.NIOServerCnxnFactory" additivity="false" >
     <level value="OFF"/>
     <appender-ref ref="ACCESS"/>
   </logger>

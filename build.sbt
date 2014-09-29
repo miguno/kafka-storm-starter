@@ -22,6 +22,8 @@ resolvers ++= Seq(
   "clojars-repository" at "https://clojars.org/repo"
 )
 
+val sparkVersion = "1.1.0"
+
 libraryDependencies ++= Seq(
   "com.twitter" %% "bijection-core" % "0.6.3",
   "com.twitter" %% "bijection-avro" % "0.6.3",
@@ -44,11 +46,23 @@ libraryDependencies ++= Seq(
     exclude("org.slf4j", "log4j-over-slf4j"),
   "org.apache.storm" % "storm-kafka" % "0.9.2-incubating"
     exclude("org.apache.zookeeper", "zookeeper"),
+  "org.apache.spark" %% "spark-core" % sparkVersion
+    exclude("org.apache.zookeeper", "zookeeper")
+    exclude("org.slf4j", "slf4j-api")
+    exclude("org.slf4j", "slf4j-log4j12")
+    exclude("org.slf4j", "jul-to-slf4j")
+    exclude("org.slf4j", "jcl-over-slf4j")
+    exclude("com.twitter", "chill_2.10")
+    exclude("log4j", "log4j"),
+  "org.apache.spark" %% "spark-streaming-kafka" % sparkVersion
+    exclude("org.apache.zookeeper", "zookeeper"),
   "com.101tec" % "zkclient" % "0.4"
     exclude("org.apache.zookeeper", "zookeeper"),
   "org.apache.curator" % "curator-test" % "2.4.0"
+    exclude("org.jboss.netty", "netty")
     exclude("org.slf4j", "slf4j-log4j12"),
   "commons-io" % "commons-io" % "2.4",
+  "org.apache.commons" % "commons-pool2" % "2.2",
   // Logback with slf4j facade
   "ch.qos.logback" % "logback-classic" % "1.1.2",
   "ch.qos.logback" % "logback-core" % "1.1.2",
