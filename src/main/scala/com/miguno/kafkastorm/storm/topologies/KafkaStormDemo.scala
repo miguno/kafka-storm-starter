@@ -1,4 +1,4 @@
-package com.miguno.kafkastorm.storm
+package com.miguno.kafkastorm.storm.topologies
 
 import java.util.Properties
 

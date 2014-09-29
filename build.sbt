@@ -127,4 +127,4 @@ testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-o")
 // See https://github.com/scoverage/scalac-scoverage-plugin
 instrumentSettings
 
-mainClass in (Compile,run) := Some("com.miguno.kafkastorm.storm.KafkaStormDemo")
+mainClass in (Compile,run) := Some("com.miguno.kafkastorm.storm.topologies.KafkaStormDemo")

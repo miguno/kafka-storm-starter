@@ -1,7 +1,8 @@
-package com.miguno.kafkastorm.storm
+package com.miguno.kafkastorm.storm.serialization
 
 import backtype.storm.spout.Scheme
 import backtype.storm.tuple.{Fields, Values}
+import com.miguno.kafkastorm.storm.bolts.AvroDecoderBolt
 import com.twitter.bijection.Injection
 import com.twitter.bijection.avro.SpecificAvroCodecs
 import org.apache.avro.specific.SpecificRecordBase

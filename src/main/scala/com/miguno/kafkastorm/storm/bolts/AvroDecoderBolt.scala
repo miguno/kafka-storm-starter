@@ -1,4 +1,4 @@
-package com.miguno.kafkastorm.storm
+package com.miguno.kafkastorm.storm.bolts
 
 import backtype.storm.topology.base.BaseBasicBolt
 import backtype.storm.topology.{BasicOutputCollector, OutputFieldsDeclarer}

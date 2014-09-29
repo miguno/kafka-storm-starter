@@ -30,12 +30,12 @@
     <appender-ref ref="A1"/>
   </root>
 
-  <logger name="com.miguno.kafkastorm.storm.AvroDecoderBolt" additivity="false">
+  <logger name="com.miguno.kafkastorm.storm.bolts.AvroDecoderBolt" additivity="false">
     <level value="OFF" />
     <appender-ref ref="ACCESS" />
   </logger>
 
-  <logger name="com.miguno.kafkastorm.storm.AvroKafkaSinkBolt" additivity="false">
+  <logger name="com.miguno.kafkastorm.storm.bolts.AvroKafkaSinkBolt" additivity="false">
     <level value="OFF" />
     <appender-ref ref="ACCESS" />
   </logger>

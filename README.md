@@ -123,9 +123,9 @@ test output:
 
     $ ./sbt run
 
-This command launches [KafkaStormDemo](src/main/scala/com/miguno/kafkastorm/storm/KafkaStormDemo.scala).  This demo
-starts in-memory instances of ZooKeeper, Kafka, and Storm.  It then runs a demo Storm topology that connects to and
-reads from the Kafka instance.
+This command launches [KafkaStormDemo](src/main/scala/com/miguno/kafkastorm/storm/topologies/KafkaStormDemo.scala).
+This demo starts in-memory instances of ZooKeeper, Kafka, and Storm.  It then runs a demo Storm topology that connects
+to and reads from the Kafka instance.
 
 You will see output similar to the following (some parts removed to improve readability):
 
@@ -156,9 +156,9 @@ versions < 0.9.3 do not allow you to reconfigure or disable its own ZooKeeper in
 
 **To stop the demo application you must kill or `Ctrl-C` the process in the terminal.**
 
-You can use [KafkaStormDemo](src/main/scala/com/miguno/kafkastorm/storm/KafkaStormDemo.scala) as a starting point to
-create your own, "real" Storm topologies that read from a "real" Kafka, Storm, and ZooKeeper infrastructure.  An easy
-way to get started with such an infrastructure is by deploying Kafka, Storm, and ZooKeeper via a tool such as
+You can use [KafkaStormDemo](src/main/scala/com/miguno/kafkastorm/storm/topologies/KafkaStormDemo.scala) as a starting
+point to create your own, "real" Storm topologies that read from a "real" Kafka, Storm, and ZooKeeper infrastructure.
+An easy way to get started with such an infrastructure is by deploying Kafka, Storm, and ZooKeeper via a tool such as
 [Wirbelsturm](https://github.com/miguno/wirbelsturm).
 
 
@@ -185,7 +185,7 @@ What features do we showcase in kafka-storm-starter?  Note that we focus on show
       An `AvroDecoderBolt[T <: org.apache.avro.specific.SpecificRecordBase]` that can be parameterized with the type of
       the Avro record `T` it will deserialize its data to (i.e. no need to write another decoder bolt just because the
       bolt needs to handle a different Avro schema).
-    * [AvroScheme[T]](src/main/scala/com/miguno/kafkastorm/storm/AvroScheme.scala):
+    * [AvroScheme[T]](src/main/scala/com/miguno/kafkastorm/storm/serialization/AvroScheme.scala):
       An `AvroScheme[T <: org.apache.avro.specific.SpecificRecordBase]` scheme, i.e. a custom
       `backtype.storm.spout.Scheme` to auto-deserialize a spout's incoming data.  The scheme can be parameterized with
       the type of the Avro record `T` it will deserializes its data to (i.e. no need to write another scheme just
@@ -193,7 +193,7 @@ What features do we showcase in kafka-storm-starter?  Note that we focus on show
         * You can opt to configure a spout (such as the Kafka spout) with `AvroScheme` if you want to perform the Avro
           decoding step directly in the spout instead of placing an `AvroDecoderBolt` after the Kafka spout.  You may
           want to profile your topology which of the two approaches works best for your use case.
-    * [TweetAvroKryoDecorator](src/main/scala/com/miguno/kafkastorm/storm/TweetAvroKryoDecorator.scala):
+    * [TweetAvroKryoDecorator](src/main/scala/com/miguno/kafkastorm/storm/serialization/TweetAvroKryoDecorator.scala):
       A custom `backtype.storm.serialization.IKryoDecorator`, i.e. a custom
       [Kryo serializer for Storm](http://storm.apache.org/documentation/Serialization.html).
         * Unfortunately we have not figured out a way to implement a parameterized `AvroKryoDecorator[T]` variant yet.
@@ -205,13 +205,13 @@ What features do we showcase in kafka-storm-starter?  Note that we focus on show
       of the Avro record `T` it will serialize its data to before sending the encoded data to Kafka (i.e. no
       need to write another Kafka sink bolt just because the bolt needs to handle a different Avro schema).
     * Storm topologies that read Avro-encoded data from Kafka:
-      [KafkaStormDemo](src/main/scala/com/miguno/kafkastorm/storm/KafkaStormDemo.scala) and
+      [KafkaStormDemo](src/main/scala/com/miguno/kafkastorm/storm/topologies/KafkaStormDemo.scala) and
       [KafkaStormSpec](src/test/scala/com/miguno/kafkastorm/integration/KafkaStormSpec.scala)
     * A Storm topology that writes Avro-encoded data to Kafka:
       [KafkaStormSpec](src/test/scala/com/miguno/kafkastorm/integration/KafkaStormSpec.scala)
 * Unit testing
     * [AvroDecoderBoltSpec](src/test/scala/com/miguno/kafkastorm/storm/AvroDecoderBoltSpec.scala)
-    * [AvroSchemeSpec](src/test/scala/com/miguno/kafkastorm/storm/AvroSchemeSpec.scala)
+    * [AvroSchemeSpec](src/test/scala/com/miguno/kafkastorm/storm/serialization/AvroSchemeSpec.scala)
     * And more under [src/test/scala](src/test/scala/com/miguno/kafkastorm/).
 * Integration testing
     * [KafkaSpec](src/test/scala/com/miguno/kafkastorm/integration/KafkaSpec.scala):
@@ -232,8 +232,8 @@ What features do we showcase in kafka-storm-starter?  Note that we focus on show
 
 * We use [Twitter Bijection](https://github.com/twitter/bijection) for Avro encoding and decoding.
 * We use [Twitter Chill](https://github.com/twitter/chill/) (which in turn uses Bijection) to implement a
-  [custom Kryo serializer for Storm](src/main/scala/com/miguno/kafkastorm/storm/TweetAvroKryoDecorator.scala) that
-  handles our Avro-derived Java class `Tweet` from [twitter.avsc](src/main/avro/twitter.avsc).
+  [custom Kryo serializer for Storm](src/main/scala/com/miguno/kafkastorm/storm/serialization/TweetAvroKryoDecorator.scala)
+  that handles our Avro-derived Java class `Tweet` from [twitter.avsc](src/main/avro/twitter.avsc).
 * Unit and integration tests are implemented with [ScalaTest](http://scalatest.org/).
 * We use [ZooKeeper 3.4.5](https://zookeeper.apache.org/).
 * We use the [official Kafka spout](https://github.com/apache/storm/tree/master/external/storm-kafka) of the
@@ -303,7 +303,7 @@ Here are some examples that demonstrate how you can run only a certain subset of
     $ ./sbt "test-only * -- -n com.miguno.kafkastorm.integration.IntegrationTest"
 
     # Run only the tests in suite AvroSchemeSpec:
-    $ ./sbt "test-only com.miguno.kafkastorm.storm.AvroSchemeSpec"
+    $ ./sbt "test-only com.miguno.kafkastorm.storm.serialization.AvroSchemeSpec"
 
     # You can also combine the examples above, of course.
 

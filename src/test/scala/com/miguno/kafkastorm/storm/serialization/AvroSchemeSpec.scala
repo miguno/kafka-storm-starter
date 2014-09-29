@@ -1,4 +1,4 @@
-package com.miguno.kafkastorm.storm
+package com.miguno.kafkastorm.storm.serialization
 
 import com.miguno.avro.Tweet
 import com.twitter.bijection.Injection
