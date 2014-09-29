@@ -1,0 +1,9 @@
+script:
+  - "./sbt test"
+language: scala
+scala:
+   - 2.10.4
+
+jdk:
+  - openjdk7
+  - oraclejdk7
