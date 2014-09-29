@@ -229,9 +229,9 @@ class KafkaSparkStreamingSpec extends FeatureSpec with Matchers with BeforeAndAf
       ssc.start()
       ssc.awaitTermination(2.seconds.toMillis)
 
-      Then("the Spark Streaming job should have consumed all tweets from Kafka")
+      Then("the Spark Streaming job should consume all tweets from Kafka")
       numInputMessages.value should be(tweets.size)
-      And("the Spark Streaming job should have written back all tweets to Kafka")
+      And("the job should write back all tweets to Kafka")
       numOutputMessages.value should be(tweets.size)
       And("the Kafka consumer app should receive the original tweets from the Spark Streaming job")
       val waitToReadSparkOutput = 300.millis
