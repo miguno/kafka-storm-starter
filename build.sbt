@@ -23,6 +23,7 @@ resolvers ++= Seq(
 )
 
 val sparkVersion = "1.1.0"
+val stormVersion = "0.9.2-incubating"
 
 libraryDependencies ++= Seq(
   "com.twitter" %% "bijection-core" % "0.6.3",
@@ -41,10 +42,10 @@ libraryDependencies ++= Seq(
     exclude("log4j", "log4j")
     exclude("org.apache.zookeeper", "zookeeper")
     exclude("com.101tec", "zkclient"),
-  "org.apache.storm" % "storm-core" % "0.9.2-incubating" % "provided"
+  "org.apache.storm" % "storm-core" % stormVersion % "provided"
     exclude("org.apache.zookeeper", "zookeeper")
     exclude("org.slf4j", "log4j-over-slf4j"),
-  "org.apache.storm" % "storm-kafka" % "0.9.2-incubating"
+  "org.apache.storm" % "storm-kafka" % stormVersion
     exclude("org.apache.zookeeper", "zookeeper"),
   "org.apache.spark" %% "spark-core" % sparkVersion
     exclude("org.apache.zookeeper", "zookeeper")
