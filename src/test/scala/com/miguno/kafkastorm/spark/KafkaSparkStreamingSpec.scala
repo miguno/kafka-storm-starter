@@ -180,7 +180,7 @@ class KafkaSparkStreamingSpec extends FeatureSpec with Matchers with BeforeAndAf
           ).map(_._2)
         }
         val unifiedStream = ssc.union(streams) // Merge the "per-partition" DStreams
-        val sparkConsumerParallelism = 1 // You'd probably pick a much higher value than 1 in production.
+        val sparkConsumerParallelism = 1 // You'd probably pick a higher value than 1 in production.
         unifiedStream.repartition(sparkConsumerParallelism) // Decouple processing parallelism from #partitions
       }
 
