@@ -170,12 +170,11 @@ class KafkaSparkStreamingSpec extends FeatureSpec with Matchers with BeforeAndAf
         //
         // And yes, the way we do this looks quite strange -- we combine a hardcoded `1` in the topic map with a
         // subsequent `(1..N)` construct.  But this approach is the recommended way.
-        val topics = Map(inputTopic.name -> 1)
         val streams = (1 to inputTopic.partitions) map { _ =>
           KafkaUtils.createStream[Array[Byte], Array[Byte], DefaultDecoder, DefaultDecoder](
             ssc,
             kafkaParams,
-            topics,
+            Map(inputTopic.name -> 1),
             storageLevel = StorageLevel.MEMORY_ONLY_SER // or: StorageLevel.MEMORY_AND_DISK_SER
           ).map(_._2)
         }
