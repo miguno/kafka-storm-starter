@@ -190,8 +190,8 @@ An easy way to get started with such an infrastructure is by deploying Kafka, St
 What features do we showcase in kafka-storm-starter?  Note that we focus on showcasing, and not necessarily on
 "production ready".
 
-* How to integrate Kafka and Storm.
-* How to use [Avro](http://avro.apache.org/) with Kafka and Storm.
+* How to integrate Kafka and Storm as well as Kafka and Spark Streaming
+* How to use [Avro](http://avro.apache.org/) with Kafka, Storm, and Spark Streaming.
 * Kafka standalone code examples
     * [KafkaProducerApp](src/main/scala/com/miguno/kafkastorm/kafka/KafkaProducerApp.scala):
       A simple Kafka producer app for writing Avro-encoded data into Kafka.
