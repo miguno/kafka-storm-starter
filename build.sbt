@@ -22,12 +22,13 @@ resolvers ++= Seq(
   "clojars-repository" at "https://clojars.org/repo"
 )
 
+val bijectionVersion = "0.6.3"
 val sparkVersion = "1.1.0"
 val stormVersion = "0.9.2-incubating"
 
 libraryDependencies ++= Seq(
-  "com.twitter" %% "bijection-core" % "0.6.3",
-  "com.twitter" %% "bijection-avro" % "0.6.3",
+  "com.twitter" %% "bijection-core" % bijectionVersion,
+  "com.twitter" %% "bijection-avro" % bijectionVersion,
   "com.twitter" %% "chill" % "0.4.0",
   "com.twitter" % "chill-avro" % "0.4.0",
   "com.twitter" %% "chill-bijection" % "0.4.0",
