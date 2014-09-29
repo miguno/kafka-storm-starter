@@ -193,7 +193,7 @@ class KafkaSparkStreamingSpec extends FeatureSpec with Matchers with BeforeAndAf
         val pool = createKafkaProducerPool(kafkaZkCluster.kafka.brokerList, outputTopic.name)
         ssc.sparkContext.broadcast(pool)
       }
-      // Use an accumulator for Bijection/Injection.
+      // We also use a broadcast variable for Bijection/Injection.
       val converter = ssc.sparkContext.broadcast(specificAvroBinaryInjectionForTweet)
 
       // Note: When working on PairDStreams (which we are not doing here) do not forget to import the corresponding
