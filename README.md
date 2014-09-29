@@ -48,8 +48,8 @@ Table of Contents
 
 This command launches our test suite.
 
-Notably it will run end-to-end tests of Kafka, Storm, and Kafka-Storm integration.  See this abridged version of the
-test output:
+Notably it will run end-to-end tests of Kafka, Storm, and Kafka/Storm as well as Kafka/Spark Streaming integration.
+See this abridged version of the test output:
 
 ```
 [...other tests removed...]
@@ -90,13 +90,16 @@ test output:
 [info]   Scenario: User creates a Storm topology that uses AvroDecoderBolt
 [info]     Given a ZooKeeper instance
 [info]     And a Kafka broker instance
-[info]     And a Storm topology that uses AvroDecoderBolt and that reads tweets from topic testing-input and writes them as-is to topic testing-output
+[info]     And a Storm topology that uses AvroDecoderBolt and that reads tweets from topic testing-input} and writes them as-is to topic testing-output
 [info]     And some tweets
 [info]     And a synchronous Kafka producer app that writes to the topic testing-input
 [info]     And a single-threaded Kafka consumer app that reads from topic testing-output and Avro-decodes the incoming data
 [info]     And a Storm topology configuration that registers an Avro Kryo decorator for Tweet
 [info]     When I run the Storm topology
 [info]     And I Avro-encode the tweets and use the Kafka producer app to sent them to Kafka
+[info]     Synchronously sending Tweet {"username": "ANY_USER_1", "text": "ANY_TEXT_1", "timestamp": 1411993272} to topic Some(testing-input)
+[info]     Synchronously sending Tweet {"username": "ANY_USER_2", "text": "ANY_TEXT_2", "timestamp": 0} to topic Some(testing-input)
+[info]     Synchronously sending Tweet {"username": "ANY_USER_3", "text": "ANY_TEXT_3", "timestamp": 1234} to topic Some(testing-input)
 [info]     Then the Kafka consumer app should receive the original tweets from the Storm topology
 [info] Feature: AvroScheme[T] for Kafka spout
 [info]   Scenario: User creates a Storm topology that uses AvroScheme in Kafka spout
@@ -109,13 +112,31 @@ test output:
 [info]     And a Storm topology configuration that registers an Avro Kryo decorator for Tweet
 [info]     When I run the Storm topology
 [info]     And I Avro-encode the tweets and use the Kafka producer app to sent them to Kafka
+[info]     Synchronously sending Tweet {"username": "ANY_USER_1", "text": "ANY_TEXT_1", "timestamp": 1411993272} to topic Some(testing-input)
+[info]     Synchronously sending Tweet {"username": "ANY_USER_2", "text": "ANY_TEXT_2", "timestamp": 0} to topic Some(testing-input)
+[info]     Synchronously sending Tweet {"username": "ANY_USER_3", "text": "ANY_TEXT_3", "timestamp": 1234} to topic Some(testing-input)
 [info]     Then the Kafka consumer app should receive the original tweets from the Storm topology
-[info] Run completed in 18 seconds, 673 milliseconds.
-[info] Total number of tests run: 25
-[info] Suites: completed 8, aborted 0
-[info] Tests: succeeded 25, failed 0, canceled 0, ignored 0, pending 0
+[info] KafkaSparkStreamingSpec:
+[info] As a user of Spark Streaming
+[info] I want to read Avro-encoded data from Kafka
+[info] so that I can quickly build Kafka<->Spark Streaming data flows
+[info] Feature: Basic functionality
+[info]   Scenario: User creates a Spark Streaming job that reads from and writes to Kafka
+[info]     Given a ZooKeeper instance
+[info]     And a Kafka broker instance
+[info]     And some tweets
+[info]     And a synchronous Kafka producer app that writes to the topic KafkaTopic(testing-input,1,1,{})
+[info]     And a single-threaded Kafka consumer app that reads from topic KafkaTopic(testing-output,1,1,{}) and Avro-decodes the incoming data
+[info]     When I Avro-encode the tweets and use the Kafka producer app to sent them to Kafka
+[info]     And I run a streaming job that reads tweets from topic KafkaTopic(testing-input,1,1,{}) and writes them as-is to topic KafkaTopic(testing-output,1,1,{})
+[info]     Then the Spark Streaming job should consume all tweets from Kafka
+[info]     And the job should write back all tweets to Kafka
+[info]     And the Kafka consumer app should receive the original tweets from the Spark Streaming job
+[info] Run completed in 45 seconds, 787 milliseconds.
+[info] Total number of tests run: 27
+[info] Suites: completed 9, aborted 0
+[info] Tests: succeeded 27, failed 0, canceled 0, ignored 0, pending 0
 [info] All tests passed.
-[success] Total time: 30 s, completed Sep 17, 2014 9:07:31 AM
 ```
 
 
