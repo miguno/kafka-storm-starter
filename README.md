@@ -1,4 +1,4 @@
-# kafka-storm-starter
+# kafka-storm-starter [![Build Status](https://travis-ci.org/miguno/kafka-storm-starter.png?branch=develop)](https://travis-ci.org/miguno/kafka-storm-starter)
 
 Code examples that show how to integrate
 [Apache Kafka](http://kafka.apache.org/) 0.8+ (latest stable) with
