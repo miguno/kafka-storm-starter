@@ -252,6 +252,9 @@ What features do we showcase in kafka-storm-starter?  Note that we focus on show
     * [KafkaStormSpec](src/test/scala/com/miguno/kafkastorm/integration/KafkaStormSpec.scala):
       Tests for integrating Storm and Kafka, which launch and run against in-memory instances of Kafka, Storm, and
       ZooKeeper.
+    * [KafkaSparkStreamingSpec](src/test/scala/com/miguno/kafkastorm/spark/KafkaSparkStreamingSpec.scala):
+      Tests for integrating Spark Streaming and Kafka, which launch and run against in-memory instances of Kafka,
+      Spark Streaming, and ZooKeeper.
 
 
 <a name="Implementation-details"></a>
