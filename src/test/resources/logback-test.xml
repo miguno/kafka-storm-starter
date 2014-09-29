@@ -16,12 +16,6 @@
     </encoder>
   </appender>
 
-  <appender name="METRICS" class="ch.qos.logback.core.ConsoleAppender">
-    <encoder>
-      <pattern>%d %-8r %m%n</pattern>
-    </encoder>
-  </appender>
-
   <!--
     Note:  There is a known bug in Storm versions <= 0.9.1 where tweaking logback settings may trigger runtime
     exceptions.  See https://www.mail-archive.com/user@storm.incubator.apache.org/msg01907.html
@@ -47,7 +41,7 @@
 
   <logger name="backtype.storm.metric.LoggingMetricsConsumer" additivity="false" >
     <level value="ERROR"/>
-    <appender-ref ref="METRICS"/>
+    <appender-ref ref="ACCESS"/>
   </logger>
 
   <!--
@@ -84,7 +78,7 @@
   -->
   <logger name="org.apache.curator.framework.imps.CuratorFrameworkImpl" additivity="false" >
     <level value="OFF"/>
-    <appender-ref ref="METRICS"/>
+    <appender-ref ref="ACCESS"/>
   </logger>
 
 </configuration>
