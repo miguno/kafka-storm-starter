@@ -11,7 +11,8 @@ import backtype.storm.{Config, ILocalCluster, Testing}
 import com.miguno.avro.Tweet
 import com.miguno.kafkastorm.kafka._
 import com.miguno.kafkastorm.logging.LazyLogging
-import com.miguno.kafkastorm.storm.{AvroDecoderBolt, AvroKafkaSinkBolt, AvroScheme, TweetAvroKryoDecorator}
+import com.miguno.kafkastorm.storm.bolts.{AvroDecoderBolt, AvroKafkaSinkBolt}
+import com.miguno.kafkastorm.storm.serialization.{TweetAvroKryoDecorator, AvroScheme}
 import com.miguno.kafkastorm.testing.{EmbeddedKafkaZooKeeperCluster, KafkaTopic}
 import com.twitter.bijection.Injection
 import com.twitter.bijection.avro.SpecificAvroCodecs

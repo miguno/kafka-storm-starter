@@ -1,4 +1,4 @@
-package com.miguno.kafkastorm.storm
+package com.miguno.kafkastorm.storm.serialization
 
 import backtype.storm.serialization.IKryoDecorator
 import com.esotericsoftware.kryo.Kryo

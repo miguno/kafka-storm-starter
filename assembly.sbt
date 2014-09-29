@@ -10,9 +10,9 @@ assemblySettings
 // https://github.com/sbt/sbt-assembly#-provided-configuration
 // http://stackoverflow.com/a/21803413/3827
 //
-// In our case, the Storm dependency must be set to "provided (cf. `build.sbt`) because, when deploying and launching
-// our Storm topology code "for real" to a distributed Storm cluster, Storm wants us to exclude the Storm dependencies
-// (jars) as they are provided [no pun intended] by the Storm cluster.
+// In our case, the Storm and Spark dependencies must be set to "provided (cf. `build.sbt`) because, when deploying and
+// launching our Storm/Spark jobs "for real" to distributed clusters, Storm/Spark want us to exclude the Storm/Spark
+// dependencies (jars) as they are provided [no pun intended] by the respective clusters.
 run in Compile <<= Defaults.runTask(fullClasspath in Compile, mainClass in (Compile, run), runner in (Compile, run))
 
 mergeStrategy in assembly <<= (mergeStrategy in assembly) {

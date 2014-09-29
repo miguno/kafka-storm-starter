@@ -6,19 +6,13 @@
 <configuration scan="true" scanPeriod="60 seconds">
  <appender name="A1" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
-      <pattern>%d{yyyy-MM-dd HH:mm:ss} %c{1} [%p] %m%n</pattern>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss} %c [%p] %m%n</pattern>
     </encoder>
  </appender>
 
  <appender name="ACCESS" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
-      <pattern>%d{yyyy-MM-dd HH:mm:ss} %c{1} [%p] %m%n</pattern>
-    </encoder>
-  </appender>
-
-  <appender name="METRICS" class="ch.qos.logback.core.ConsoleAppender">
-    <encoder>
-      <pattern>%d %-8r %m%n</pattern>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss} %c [%p] %m%n</pattern>
     </encoder>
   </appender>
 
@@ -30,12 +24,12 @@
     <appender-ref ref="A1"/>
   </root>
 
-  <logger name="com.miguno.kafkastorm.storm.AvroDecoderBolt" additivity="false">
+  <logger name="com.miguno.kafkastorm.storm.bolts.AvroDecoderBolt" additivity="false">
     <level value="OFF" />
     <appender-ref ref="ACCESS" />
   </logger>
 
-  <logger name="com.miguno.kafkastorm.storm.AvroKafkaSinkBolt" additivity="false">
+  <logger name="com.miguno.kafkastorm.storm.bolts.AvroKafkaSinkBolt" additivity="false">
     <level value="OFF" />
     <appender-ref ref="ACCESS" />
   </logger>
@@ -47,7 +41,13 @@
 
   <logger name="backtype.storm.metric.LoggingMetricsConsumer" additivity="false" >
     <level value="ERROR"/>
-    <appender-ref ref="METRICS"/>
+    <appender-ref ref="ACCESS"/>
+  </logger>
+
+  <!-- Jetty (used by Spark) is very chatty -->
+  <logger name="org.eclipse.jetty" additivity="false" >
+    <level value="ERROR"/>
+    <appender-ref ref="ACCESS"/>
   </logger>
 
   <!--
@@ -84,7 +84,18 @@
   -->
   <logger name="org.apache.curator.framework.imps.CuratorFrameworkImpl" additivity="false" >
     <level value="OFF"/>
-    <appender-ref ref="METRICS"/>
+    <appender-ref ref="ACCESS"/>
+  </logger>
+
+  <!--
+    Squelch NIOServerCnxnFactory from reporting SparkException's, which are expected during the shutdown phase of our
+    Spark Streaming examples:
+
+        org.apache.spark.SparkException: Job cancelled because SparkContext was shut down
+  -->
+  <logger name="org.apache.zookeeper.server.NIOServerCnxnFactory" additivity="false" >
+    <level value="OFF"/>
+    <appender-ref ref="ACCESS"/>
   </logger>
 
 </configuration>

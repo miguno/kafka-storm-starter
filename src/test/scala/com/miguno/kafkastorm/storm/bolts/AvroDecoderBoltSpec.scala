@@ -1,8 +1,9 @@
-package com.miguno.kafkastorm.storm
+package com.miguno.kafkastorm.storm.bolts
 
 import backtype.storm.topology.{BasicOutputCollector, OutputFieldsDeclarer}
 import backtype.storm.tuple.{Fields, Tuple, Values}
 import com.miguno.avro.Tweet
+import com.miguno.kafkastorm.storm.FieldsEqualTo
 import com.twitter.bijection.Injection
 import com.twitter.bijection.avro.SpecificAvroCodecs
 import org.mockito.Matchers._

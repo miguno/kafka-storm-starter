@@ -22,12 +22,17 @@ resolvers ++= Seq(
   "clojars-repository" at "https://clojars.org/repo"
 )
 
+val bijectionVersion = "0.6.3"
+val chillVersion = "0.4.0"
+val sparkVersion = "1.1.0"
+val stormVersion = "0.9.2-incubating"
+
 libraryDependencies ++= Seq(
-  "com.twitter" %% "bijection-core" % "0.6.3",
-  "com.twitter" %% "bijection-avro" % "0.6.3",
-  "com.twitter" %% "chill" % "0.4.0",
-  "com.twitter" % "chill-avro" % "0.4.0",
-  "com.twitter" %% "chill-bijection" % "0.4.0",
+  "com.twitter" %% "bijection-core" % bijectionVersion,
+  "com.twitter" %% "bijection-avro" % bijectionVersion,
+  "com.twitter" %% "chill" % chillVersion,
+  "com.twitter" % "chill-avro" % chillVersion,
+  "com.twitter" %% "chill-bijection" % chillVersion,
   // The excludes of jms, jmxtools and jmxri are required as per https://issues.apache.org/jira/browse/KAFKA-974.
   // The exclude of slf4j-simple is because it overlaps with our use of logback with slf4j facade;  without the exclude
   // we get slf4j warnings and logback's configuration is not picked up.
@@ -39,16 +44,28 @@ libraryDependencies ++= Seq(
     exclude("log4j", "log4j")
     exclude("org.apache.zookeeper", "zookeeper")
     exclude("com.101tec", "zkclient"),
-  "org.apache.storm" % "storm-core" % "0.9.2-incubating" % "provided"
+  "org.apache.storm" % "storm-core" % stormVersion % "provided"
     exclude("org.apache.zookeeper", "zookeeper")
     exclude("org.slf4j", "log4j-over-slf4j"),
-  "org.apache.storm" % "storm-kafka" % "0.9.2-incubating"
+  "org.apache.storm" % "storm-kafka" % stormVersion
+    exclude("org.apache.zookeeper", "zookeeper"),
+  "org.apache.spark" %% "spark-core" % sparkVersion
+    exclude("org.apache.zookeeper", "zookeeper")
+    exclude("org.slf4j", "slf4j-api")
+    exclude("org.slf4j", "slf4j-log4j12")
+    exclude("org.slf4j", "jul-to-slf4j")
+    exclude("org.slf4j", "jcl-over-slf4j")
+    exclude("com.twitter", "chill_2.10")
+    exclude("log4j", "log4j"),
+  "org.apache.spark" %% "spark-streaming-kafka" % sparkVersion
     exclude("org.apache.zookeeper", "zookeeper"),
   "com.101tec" % "zkclient" % "0.4"
     exclude("org.apache.zookeeper", "zookeeper"),
   "org.apache.curator" % "curator-test" % "2.4.0"
+    exclude("org.jboss.netty", "netty")
     exclude("org.slf4j", "slf4j-log4j12"),
   "commons-io" % "commons-io" % "2.4",
+  "org.apache.commons" % "commons-pool2" % "2.2",
   // Logback with slf4j facade
   "ch.qos.logback" % "logback-classic" % "1.1.2",
   "ch.qos.logback" % "logback-core" % "1.1.2",
@@ -70,6 +87,9 @@ fork := true
 // Note: If you need to pass options to the JVM used by sbt (i.e. the "parent" JVM), then you should modify `.sbtopts`.
 javaOptions ++= Seq(
   "-Xmx512m",
+  "-XX:+UseG1GC",
+  "-XX:MaxGCPauseMillis=20",
+  "-XX:InitiatingHeapOccupancyPercent=35",
   "-Djava.awt.headless=true",
   "-Djava.net.preferIPv4Stack=true")
 
@@ -127,4 +147,4 @@ testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-o")
 // See https://github.com/scoverage/scalac-scoverage-plugin
 instrumentSettings
 
-mainClass in (Compile,run) := Some("com.miguno.kafkastorm.storm.KafkaStormDemo")
+mainClass in (Compile,run) := Some("com.miguno.kafkastorm.storm.topologies.KafkaStormDemo")

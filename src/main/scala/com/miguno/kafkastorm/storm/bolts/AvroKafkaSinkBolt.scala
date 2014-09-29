@@ -1,4 +1,4 @@
-package com.miguno.kafkastorm.storm
+package com.miguno.kafkastorm.storm.bolts
 
 import java.util
 
