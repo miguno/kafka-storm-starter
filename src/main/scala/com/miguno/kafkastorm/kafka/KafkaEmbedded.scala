@@ -81,7 +81,7 @@ class KafkaEmbedded(config: Properties = new Properties) extends LazyLogging {
     logger.debug(s"Shutdown of embedded Kafka broker at $brokerList completed (with ZK server at $zookeeperConnect)")
   }
 
-  def createTopic(topic: String, partitions: Int =  1, replicationFactor: Int = 1, config: Properties = new Properties): Unit = {
+  def createTopic(topic: String, partitions: Int = 1, replicationFactor: Int = 1, config: Properties = new Properties): Unit = {
     logger.debug(s"Creating topic { name: $topic, partitions: $partitions, replicationFactor: $replicationFactor, config: $config }")
     val sessionTimeout = 10.seconds
     val connectionTimeout = 8.seconds

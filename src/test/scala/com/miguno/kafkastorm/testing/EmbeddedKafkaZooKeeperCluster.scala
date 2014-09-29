@@ -120,7 +120,7 @@ class EmbeddedKafkaZooKeeperCluster(zookeeperPort: Integer = InstanceSpec.getRan
 
 }
 
-case class KafkaTopic(name: String, partitions: Integer = 1, replicationFactor: Integer = 1,
+case class KafkaTopic(name: String, partitions: Int = 1, replicationFactor: Int = 1,
                       config: Properties = new Properties) {
 
   require(partitions > 0)
