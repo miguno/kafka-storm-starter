@@ -182,7 +182,10 @@ class KafkaSparkStreamingSpec extends FeatureSpec with Matchers with BeforeAndAf
         }
         val unifiedStream = ssc.union(streams) // Merge the "per-partition" DStreams
         val sparkConsumerParallelism = 1 // You'd probably pick a higher value than 1 in production.
-        unifiedStream.repartition(sparkConsumerParallelism) // Decouple processing parallelism from #partitions
+        // Repartition distributes the received batches of data across specified number of machines in the cluster
+        // before further processing.  Essentially, what we are doing here is to decouple processing parallelism from
+        // reading parallelism (limited by #partitions).
+        unifiedStream.repartition(sparkConsumerParallelism)
       }
 
       // We use accumulators to track the number of consumed and produced messages across all tasks.  Named accumulators
