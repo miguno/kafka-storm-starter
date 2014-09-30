@@ -237,7 +237,7 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterEach w
       override def run(stormCluster: ILocalCluster) {
         val topologyName = "storm-kafka-integration-test"
         stormCluster.submitTopology(topologyName, topologyConfig, topology)
-        val waitForTopologyStartup = 3.seconds
+        val waitForTopologyStartup = 5.seconds
         Thread.sleep(waitForTopologyStartup.toMillis)
 
         And("I Avro-encode the tweets and use the Kafka producer app to sent them to Kafka")
@@ -248,7 +248,7 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterEach w
             producerApp.send(bytes)
         }
 
-        val waitForStormToReadFromKafka = 1.second
+        val waitForStormToReadFromKafka = 3.second
         Thread.sleep(waitForStormToReadFromKafka.toMillis)
       }
     })
