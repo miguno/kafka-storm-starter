@@ -730,7 +730,7 @@ Kafka spout [HolmesNL/kafka-spout](https://github.com/HolmesNL/kafka-spout), wri
 Twitter Bijection:
 
 * [SpecificAvroCodecsSpecification.scala](https://github.com/twitter/bijection/blob/develop/bijection-avro/src/test/scala/com/twitter/bijection/avro/SpecificAvroCodecsSpecification.scala)
-  -- How to use Bijection for Avro's `Specific*` API (which is what you would usually do)
+  -- How to use Bijection for Avro's `Specific*` API
 * [GenericAvroCodecsSpecification.scala](https://github.com/twitter/bijection/blob/develop/bijection-avro/src/test/scala/com/twitter/bijection/avro/GenericAvroCodecsSpecification.scala)
   -- How to use Bijection for Avro's `Generic*` API
 
