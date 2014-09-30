@@ -55,7 +55,8 @@ class KafkaSparkStreamingSpec extends FeatureSpec with Matchers with BeforeAndAf
       // DStream, and each receiver occupies 1 core.  If all your cores are occupied by receivers then no data will be
       // processed!
       // https://spark.apache.org/docs/1.1.0/streaming-programming-guide.html
-      conf.setMaster("local[2]")
+      val cores = inputTopic.partitions + 1
+      conf.setMaster(s"local[$cores]")
       // Use Kryo to speed up serialization, recommended as default setup for Spark Streaming
       // http://spark.apache.org/docs/1.1.0/tuning.html#data-serialization
       conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
