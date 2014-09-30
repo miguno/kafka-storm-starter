@@ -86,6 +86,7 @@ fork := true
 //
 // Note: If you need to pass options to the JVM used by sbt (i.e. the "parent" JVM), then you should modify `.sbtopts`.
 javaOptions ++= Seq(
+  "-Xms256m",
   "-Xmx512m",
   "-XX:+UseG1GC",
   "-XX:MaxGCPauseMillis=20",
