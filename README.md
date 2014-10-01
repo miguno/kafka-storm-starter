@@ -232,10 +232,10 @@ What features do we showcase in kafka-storm-starter?  Note that we focus on show
       [KafkaStormSpec](src/test/scala/com/miguno/kafkastorm/integration/KafkaStormSpec.scala)
 * Kafka and Spark Streaming integration
     * [KafkaSparkStreamingSpec](src/test/scala/com/miguno/kafkastorm/spark/KafkaSparkStreamingSpec.scala) a streaming
-      job that reads input data from Kafka and writes output data to Kafka.  Demonstrates how to read from all
+      job that reads input data from Kafka and writes output data to Kafka.  It demonstrates how to read from all
       partitions of a topic in parallel, how to decouple the downstream parallelism from the number of parttions
       (think: use 20 "threads" for processing the Kafka data even though the Kafka topic has only 5 partitions),
-      and how to write output of the streaming job back into Kafka.  The input and output data is in Avro format,
+      and how to write the output of the streaming job back into Kafka.  The input and output data is in Avro format,
       and we use Twitter Bijection for the serialization work.
 * Unit testing
     * [AvroDecoderBoltSpec](src/test/scala/com/miguno/kafkastorm/storm/AvroDecoderBoltSpec.scala)
