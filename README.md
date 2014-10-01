@@ -237,6 +237,7 @@ What features do we showcase in kafka-storm-starter?  Note that we focus on show
       (think: use 20 "threads" for processing the Kafka data even though the Kafka topic has only 5 partitions),
       and how to write the output of the streaming job back into Kafka.  The input and output data is in Avro format,
       and we use Twitter Bijection for the serialization work.
+      See my blog post on [Integrating Kafka and Spark Streaming](http://www.michael-noll.com/blog/2014/10/01/kafka-spark-streaming-integration-example-tutorial/) for further details.
 * Unit testing
     * [AvroDecoderBoltSpec](src/test/scala/com/miguno/kafkastorm/storm/AvroDecoderBoltSpec.scala)
     * [AvroSchemeSpec](src/test/scala/com/miguno/kafkastorm/storm/serialization/AvroSchemeSpec.scala)
