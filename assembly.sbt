@@ -34,3 +34,5 @@ mergeStrategy in assembly <<= (mergeStrategy in assembly) {
 //
 // Comment the following line if you do want to (re-)run all the tests before building assembly.
 test in assembly := {}
+
+logLevel in assembly := Level.Warn
