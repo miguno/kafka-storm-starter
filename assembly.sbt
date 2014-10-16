@@ -18,6 +18,12 @@ run in Compile <<= Defaults.runTask(fullClasspath in Compile, mainClass in (Comp
 mergeStrategy in assembly <<= (mergeStrategy in assembly) {
   (old) => {
     case s if s.endsWith(".class") => MergeStrategy.last
+    case s if s.endsWith(".default") => MergeStrategy.last
+    case s if s.endsWith(".map") => MergeStrategy.last
+    case s if s.endsWith(".providers") => MergeStrategy.last
+    case s if s.endsWith(".properties") => MergeStrategy.last
+    case s if s.endsWith(".RSA") => MergeStrategy.last
+    case s if s.endsWith("mailcap") => MergeStrategy.last
     case x => old(x)
   }
 }
