@@ -97,5 +97,9 @@
     <level value="OFF"/>
     <appender-ref ref="ACCESS"/>
   </logger>
+  <logger name="org.apache.storm.zookeeper.server.NIOServerCnxnFactory" additivity="false" >
+    <level value="OFF"/>
+    <appender-ref ref="ACCESS"/>
+  </logger>
 
 </configuration>
