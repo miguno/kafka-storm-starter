@@ -6,8 +6,8 @@ BACKWARDS INCOMPATIBILITIES
 
 IMPROVEMENTS
 
-* Use Storm 0.9.2.  This includes two notable improvements:
-    * We can and do use the Kafka 0.8 compatible Kafka spout included in Storm 0.9.2.
+* Use Storm 0.9.3.  This includes two notable improvements:
+    * We can and do use the Kafka 0.8 compatible Kafka spout included in Storm 0.9.2+.
     * We use ZooKeeper 3.4.5, up from 3.3.x before.
 * Add Spark Streaming example, which reads from Kafka and writes to Kafka.  The streaming job is fucntionally equivalent
   to the test topologies in `KafkaStormSpec`.
