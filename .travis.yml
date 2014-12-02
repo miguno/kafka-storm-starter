@@ -1,3 +1,6 @@
+env:
+  global:
+    - STORM_TEST_TIMEOUT_MS=10000
 script:
   - "./sbt test"
 language: scala
