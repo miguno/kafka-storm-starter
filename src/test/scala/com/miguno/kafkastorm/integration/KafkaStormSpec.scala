@@ -221,15 +221,15 @@ class KafkaStormSpec extends FeatureSpec with Matchers with BeforeAndAfterEach w
       mkClusterParam.setSupervisors(2)
       val stormClusterConfig = new Config
 
-      // Example (requires Storm 0.9.3+ with STORM-213):
+      // (requires Storm 0.9.3+ with STORM-213):
       // Storm shall use our existing in-memory ZK instance instead of starting its own, which it does by default as
       // part of its Testing API workflow (which relies on LocalCluster).  Using the same ZK instance for Kafka and
       // Storm is a setup often used in production, hence we can use this example to test such setups.  Also, the shared
       // ZK setup means our tests run slightly faster.
-      //
-      //import scala.collection.JavaConverters._
-      //stormClusterConfig.put(Config.STORM_ZOOKEEPER_SERVERS, List(zookeeper.hostname).asJava)
-      //stormClusterConfig.put(Config.STORM_ZOOKEEPER_PORT, zookeeper.port: Integer)
+      import scala.collection.JavaConverters._
+      stormClusterConfig.put(Config.STORM_ZOOKEEPER_SERVERS, List(kafkaZkCluster.zookeeper.hostname).asJava)
+      stormClusterConfig.put(Config.STORM_ZOOKEEPER_PORT, kafkaZkCluster.zookeeper.port: Integer)
+
       mkClusterParam.setDaemonConf(stormClusterConfig)
       mkClusterParam
     }
