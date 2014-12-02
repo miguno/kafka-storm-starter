@@ -9,6 +9,7 @@ IMPROVEMENTS
 * Use Storm 0.9.3.  This includes two notable improvements:
     * We can and do use the Kafka 0.8 compatible Kafka spout included in Storm 0.9.2+.
     * We use ZooKeeper 3.4.5, up from 3.3.x before.
+* Use Spark 1.1.1.
 * Add Spark Streaming example, which reads from Kafka and writes to Kafka.  The streaming job is fucntionally equivalent
   to the test topologies in `KafkaStormSpec`.
 * AvroKafkaSinkBolt should not declare any output fields because it writes to Kafka only, it does not emit any tuples.
