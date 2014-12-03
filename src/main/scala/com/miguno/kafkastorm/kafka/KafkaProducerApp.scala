@@ -46,7 +46,7 @@ case class KafkaProducerApp(brokerList: String,
     val t = topic.getOrElse(defaultTopic.getOrElse(throw new IllegalArgumentException("Must provide topic or default topic")))
     require(!t.isEmpty, "Topic must not be empty")
     key match {
-      case Some(key) => new KeyedMessage(t, key, value)
+      case Some(k) => new KeyedMessage(t, k, value)
       case _ => new KeyedMessage(t, value)
     }
   }
