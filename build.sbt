@@ -22,8 +22,8 @@ resolvers ++= Seq(
   "clojars-repository" at "https://clojars.org/repo"
 )
 
-val bijectionVersion = "0.6.3"
-val chillVersion = "0.4.0"
+val bijectionVersion = "0.7.0"
+val chillVersion = "0.5.1"
 val sparkVersion = "1.1.1"
 val stormVersion = "0.9.3"
 
@@ -31,7 +31,7 @@ libraryDependencies ++= Seq(
   "com.twitter" %% "bijection-core" % bijectionVersion,
   "com.twitter" %% "bijection-avro" % bijectionVersion,
   "com.twitter" %% "chill" % chillVersion,
-  "com.twitter" % "chill-avro" % chillVersion,
+  "com.twitter" %% "chill-avro" % chillVersion,
   "com.twitter" %% "chill-bijection" % chillVersion,
   // The excludes of jms, jmxtools and jmxri are required as per https://issues.apache.org/jira/browse/KAFKA-974.
   // The exclude of slf4j-simple is because it overlaps with our use of logback with slf4j facade;  without the exclude
