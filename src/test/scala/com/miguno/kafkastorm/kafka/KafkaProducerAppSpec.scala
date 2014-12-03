@@ -39,7 +39,7 @@ class KafkaProducerAppSpec extends FunSpec with Matchers with GivenWhenThen with
         c
       }
       And("with the constructor parameter that sets the broker list to " + AnyBrokerList)
-      val producerApp = new KafkaProducerApp(AnyBrokerList, defaultTopic = Option(AnyTopic))
+      val producerApp = new KafkaProducerApp(AnyBrokerList, config, defaultTopic = Option(AnyTopic))
 
       Then("the Kafka producer's actual broker list should be " + AnyBrokerList)
       producerApp.config.props.getString("metadata.broker.list") should be(AnyBrokerList)
