@@ -65,7 +65,7 @@ libraryDependencies ++= Seq(
     exclude("org.jboss.netty", "netty")
     exclude("org.slf4j", "slf4j-log4j12"),
   "commons-io" % "commons-io" % "2.4",
-  "org.apache.commons" % "commons-pool2" % "2.2",
+  "org.apache.commons" % "commons-pool2" % "2.3",
   // Logback with slf4j facade
   "ch.qos.logback" % "logback-classic" % "1.1.2",
   // Test dependencies
