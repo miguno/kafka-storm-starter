@@ -6,6 +6,7 @@ BACKWARDS INCOMPATIBILITIES
 
 IMPROVEMENTS
 
+* Use Kafka 0.8.2.2.
 * Use Storm 0.9.5.  This includes two notable improvements:
     * We can and do use the Kafka 0.8 compatible Kafka spout included in Storm 0.9.2+.
     * We use ZooKeeper 3.4.5, up from 3.3.x before.
