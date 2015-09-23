@@ -25,7 +25,7 @@ resolvers ++= Seq(
 val bijectionVersion = "0.7.1"
 val chillVersion = "0.5.1"
 val sparkVersion = "1.1.1"
-val stormVersion = "0.9.3"
+val stormVersion = "0.9.5"
 
 libraryDependencies ++= Seq(
   "com.twitter" %% "bijection-core" % bijectionVersion,
