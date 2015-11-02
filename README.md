@@ -202,7 +202,7 @@ What features do we showcase in kafka-storm-starter?  Note that we focus on show
       [KafkaSpec](src/test/scala/com/miguno/kafkastorm/integration/KafkaSpec.scala) puts this consumer to use and shows
       how to use Twitter Bijection to Avro-decode the messages being read from Kafka.
 * Storm standalone code examples
-    * [AvroDecoderBolt[T]](src/main/scala/com/miguno/kafkastorm/storm/AvroDecoderBolt.scala):
+    * [AvroDecoderBolt[T]](src/main/scala/com/miguno/kafkastorm/storm/bolts/AvroDecoderBolt.scala):
       An `AvroDecoderBolt[T <: org.apache.avro.specific.SpecificRecordBase]` that can be parameterized with the type of
       the Avro record `T` it will deserialize its data to (i.e. no need to write another decoder bolt just because the
       bolt needs to handle a different Avro schema).
@@ -221,7 +221,7 @@ What features do we showcase in kafka-storm-starter?  Note that we focus on show
           (A "straight-forward" approach we tried -- similar to the other parameterized components -- compiled fine but
           failed at runtime when running the tests).  Code contributions are welcome!
 * Kafka and Storm integration
-    * [AvroKafkaSinkBolt[T]](src/main/scala/com/miguno/kafkastorm/storm/AvroKafkaSinkBolt.scala):
+    * [AvroKafkaSinkBolt[T]](src/main/scala/com/miguno/kafkastorm/storm/bolts/AvroKafkaSinkBolt.scala):
       An `AvroKafkaSinkBolt[T <: org.apache.avro.specific.SpecificRecordBase]` that can be parameterized with the type
       of the Avro record `T` it will serialize its data to before sending the encoded data to Kafka (i.e. no
       need to write another Kafka sink bolt just because the bolt needs to handle a different Avro schema).
@@ -239,7 +239,7 @@ What features do we showcase in kafka-storm-starter?  Note that we focus on show
       and we use Twitter Bijection for the serialization work.
       See my blog post on [Integrating Kafka and Spark Streaming](http://www.michael-noll.com/blog/2014/10/01/kafka-spark-streaming-integration-example-tutorial/) for further details.
 * Unit testing
-    * [AvroDecoderBoltSpec](src/test/scala/com/miguno/kafkastorm/storm/AvroDecoderBoltSpec.scala)
+    * [AvroDecoderBoltSpec](src/test/scala/com/miguno/kafkastorm/storm/bolts/AvroDecoderBoltSpec.scala)
     * [AvroSchemeSpec](src/test/scala/com/miguno/kafkastorm/storm/serialization/AvroSchemeSpec.scala)
     * And more under [src/test/scala](src/test/scala/com/miguno/kafkastorm/).
 * Integration testing
