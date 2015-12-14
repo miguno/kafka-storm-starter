@@ -7,7 +7,7 @@ scalaVersion := "2.10.5"
 seq(sbtavro.SbtAvro.avroSettings : _*)
 
 // Configure the desired Avro version.  sbt-avro automatically injects a libraryDependency.
-(version in avroConfig) := "1.7.6"
+(version in avroConfig) := "1.7.7"
 
 // Look for *.avsc etc. files in src/test/avro
 (sourceDirectory in avroConfig) <<= (sourceDirectory in Compile)(_ / "avro")
