@@ -2,7 +2,7 @@ organization := "com.miguno.kafkastorm"
 
 name := "kafka-storm-starter"
 
-scalaVersion := "2.10.4"
+scalaVersion := "2.10.5"
 
 seq(sbtavro.SbtAvro.avroSettings : _*)
 

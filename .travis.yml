@@ -5,7 +5,7 @@ script:
   - "./sbt test"
 language: scala
 scala:
-   - 2.10.4
+   - 2.10.5
 
 jdk:
   - openjdk7
