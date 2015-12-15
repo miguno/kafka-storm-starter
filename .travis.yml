@@ -1,6 +1,8 @@
 env:
   global:
     - STORM_TEST_TIMEOUT_MS=13000
+before_install:
+  - sudo hostname "$(hostname | cut -c1-63)"
 script:
   - "./sbt test"
 language: scala
