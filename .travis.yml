@@ -6,7 +6,7 @@ env:
 # https://github.com/travis-ci/travis-ci/issues/5227
 # https://docs.travis-ci.com/user/hostname
 addons:
-  hostname: "$(hostname | cut -c1-63)"
+  hostname: travis-worker
 script:
   - "./sbt test"
 language: scala
