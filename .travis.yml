@@ -1,12 +1,8 @@
+sudo: true
+
 env:
   global:
     - STORM_TEST_TIMEOUT_MS=13000
-# Workaround for Travis CI issue 5227, which results in a buffer overflow
-# caused by Java when running the build on OpenJDK.
-# https://github.com/travis-ci/travis-ci/issues/5227
-# https://docs.travis-ci.com/user/hostname
-addons:
-  hostname: short-hostname
 script:
   - "./sbt test"
 language: scala
@@ -16,3 +12,10 @@ scala:
 jdk:
   - openjdk7
   - oraclejdk7
+
+# Workaround for Travis CI issue 5227, which results in a buffer overflow
+# caused by Java when running the build on OpenJDK.
+# https://github.com/travis-ci/travis-ci/issues/5227
+# https://docs.travis-ci.com/user/hostname
+addons:
+  hostname: short-hostname
