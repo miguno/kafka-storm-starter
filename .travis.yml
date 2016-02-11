@@ -6,7 +6,7 @@ env:
 # https://github.com/travis-ci/travis-ci/issues/5227
 # https://docs.travis-ci.com/user/hostname
 addons:
-  hostname: travis-worker
+  hostname: short-hostname
 script:
   - "./sbt test"
 language: scala
