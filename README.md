@@ -5,6 +5,17 @@ Code examples that show how to integrate
 [Apache Storm](http://storm.apache.org/) 0.9+ (latest stable),
 while using [Apache Avro](http://avro.apache.org/) as the data serialization format.
 
+> **Interested in [Kafka Streams](http://www.confluent.io/blog/introducing-kafka-streams-stream-processing-made-simple)?**
+>
+> "Kafka Streams ([source code](https://github.com/apache/kafka/tree/trunk/streams)), a component of open source Apache
+> Kafka, is a powerful, easy-to-use library for building highly scalable, fault-tolerant, distributed stream processing
+> applications on top of Apache Kafka.  It builds upon important concepts for stream processing such as properly
+> distinguishing between event-time and processing-time, handling of late-arriving data, and efficient management of
+> application state."
+>
+> Take a look at the [Kafka Streams code examples](https://github.com/confluentinc/examples/tree/master/kafka-streams)
+> at https://github.com/confluentinc/examples.
+
 ---
 
 Table of Contents
