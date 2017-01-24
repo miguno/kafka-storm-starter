@@ -1,8 +1,9 @@
 # kafka-storm-starter [![Build Status](https://travis-ci.org/miguno/kafka-storm-starter.png?branch=develop)](https://travis-ci.org/miguno/kafka-storm-starter)
 
 Code examples that show how to integrate
-[Apache Kafka](http://kafka.apache.org/) 0.8+ (latest stable) with
-[Apache Storm](http://storm.apache.org/) 0.9+ (latest stable),
+[Apache Kafka](http://kafka.apache.org/) 0.8+ with
+[Apache Storm](http://storm.apache.org/) 0.9+ and
+[Apache Spark](http://spark.apache.org/) 1.1+
 while using [Apache Avro](http://avro.apache.org/) as the data serialization format.
 
 > **A great alternative to the examples in this repository, which require you to operate a Spark or Storm processing cluster: build elastic, distributed, fault-tolerant stream processing applications with [Kafka's Streams API](http://www.confluent.io/blog/introducing-kafka-streams-stream-processing-made-simple) (read: no additional cluster required)**
