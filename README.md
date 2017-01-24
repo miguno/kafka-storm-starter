@@ -13,7 +13,7 @@ while using [Apache Avro](http://avro.apache.org/) as the data serialization for
 > distinguishing between event-time and processing-time, handling of late-arriving data, and efficient management of
 > application state."
 >
-> Take a look at the [Kafka Streams code examples](https://github.com/confluentinc/examples/tree/master/kafka-streams)
+> Take a look at the [Kafka Streams code examples](https://github.com/confluentinc/examples)
 > at https://github.com/confluentinc/examples.
 
 ---
