@@ -1,3 +1,5 @@
+# THIS PROJECT IS NO LONGER MAINTAINED
+
 # kafka-storm-starter [![Build Status](https://travis-ci.org/miguno/kafka-storm-starter.png?branch=develop)](https://travis-ci.org/miguno/kafka-storm-starter)
 
 Code examples that show how to integrate
